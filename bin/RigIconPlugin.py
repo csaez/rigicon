@@ -48,6 +48,5 @@ def RigIcon_Execute():
 def RigIcon_Match(in_ctxt):
     log("csRigIconFilter_Match called", C.siVerbose)
     obj = in_ctxt.GetAttribute("Input")
-    if obj.Type == "crvlist" and obj.Properties("RigIcon_Data") is not None:
-        return True
-    return False
+    import rigicon.icon as icon
+    return icon.is_icon(obj)
