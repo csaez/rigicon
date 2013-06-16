@@ -1,6 +1,6 @@
 import os
 from PyQt4 import uic, QtCore, QtGui
-from wishlib.qt import QMainWindow
+from wishlib.qt.QtGui import QMainWindow
 from wishlib.si import sisel
 from .. import library
 

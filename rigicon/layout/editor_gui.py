@@ -2,7 +2,7 @@ import os
 from PyQt4 import uic, QtCore, QtGui
 from sisignals import signals, muteSIEvent
 from wishlib.si import si, sisel, log, C
-from wishlib.qt import QDialog
+from wishlib.qt.QtGui import QDialog
 from .. import icon
 from .. import library
 
@@ -38,7 +38,7 @@ class GUI(QDialog):
         self.ui.icons_comboBox.addItem("Custom")
         for i in library.items:
             self.ui.icons_comboBox.addItem(i.name)
-        # set default values
+        # set widget values
         data_type = {str: lambda x, y: x.setText(y),
                      bool: lambda x, y: x.setEnabled(y),
                      int: lambda x, y: x.setCurrentIndex(y),
@@ -47,6 +47,11 @@ class GUI(QDialog):
         for k, v in self.DEFAULT_VALUES.iteritems():
             f = data_type.get(type(v))
             f(getattr(self.ui, k), v)
+        # remove me!
+        for i in self._GetActiveRigIcon():
+            for k, v in i.__dict__.iteritems():
+                if not k.startswith("_"):
+                    print getattr(i, k)
 
     def Name_OnChanged(self):
         return
@@ -152,10 +157,15 @@ class GUI(QDialog):
         self.ui.color_button.setStyleSheet(sStyle)
 
     def _GetActiveRigIcon(self):
-        return
-        lSel = map(lambda x: RigIcon(x), sisel)
-        lSel = filter(lambda x: x.IsValid(), lSel)
-        return lSel
+        # return
+        for x in sisel:
+            item = icon.Icon(x)
+            if item is not None:
+                yield item
+        # return [x for i in sisel if icon.Icon(i) is not None]
+        # lSel = map(lambda x: RigIcon(x), sisel)
+        # lSel = filter(lambda x: x.IsValid(), lSel)
+        # return lSel
 
     def _GetData(self, p_oIcon):
         return
