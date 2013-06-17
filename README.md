@@ -14,7 +14,7 @@ You can get `rigicon` from the Python Package Index.
 
     pip install rigicon
 
-Once installed just copy `RigIconPlugin.py` file to your plugins directory on Softimage.
+Once installed just copy `RigIconPlugin.py` file to the softimage's plugins directory.
 
 Ussage
 ------
