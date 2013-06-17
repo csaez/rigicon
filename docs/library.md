@@ -1,5 +1,5 @@
-`rigicon.library`
-===============
+`rigicon.library` module
+========================
 This module helps to manage curve data into the library.
 
 ### rigicon.library.`get_items()`

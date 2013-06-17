@@ -1,10 +1,10 @@
-`rigicon.icon`
-==============
+`rigicon.icon` module
+=====================
 ### rigicon.icon.`is_icon(obj)`
 Returns `True` if the passed obj (a softimage curve) was already converted to a `Icon()` object, otherwise it returns `False`.
 
 
-rigicon.library.`Icon(obj)`
+rigicon.icon.`Icon(obj)`
 ---------------------------
 This class extend softimage curve functionality.
 The constructor is expecting a softimage object, if the softimage object type is not `crvlist` then then instance is not created.
@@ -29,41 +29,17 @@ Set shape offset shape scale where `x`, `y` and `z` are `float` representing the
 Set wireframe color where `r`, `g` and `b` are `int` representing the color components.
 
 #### Attributes:
-* Icon.`icon_name`:
-Gives read-only access to the icon's name (`str`).
+* `icon_name`:
+Gives read-only access to the icon's name as `str`.
 
-* Icon.`posx`:
-Gives read/write access to offset shape position x as `float`.
+* `posx`/`posy`/`posz`:
+Gives read/write access to offset shape position coords as `float`.
 
-* Icon.`posy`:
-Gives read/write access to offset shape position y as `float`.
+* `rotx`/`roty`/`rotz`:
+Gives read/write access to offset shape rotation coords as `float`.
 
-* Icon.`posz`:
-Gives read/write access to offset shape position y as `float`.
+* `sclx`/`scly`/`sclz`:
+Gives read/write access to offset shape scale coords as `float`.
 
-* Icon.`rotx`:
-Gives read/write access to offset shape rotation x as `float`.
-
-* Icon.`roty`:
-Gives read/write access to offset shape rotation y as `float`.
-
-* Icon.`rotz`:
-Gives read/write access to offset shape rotation z as `float`.
-
-* Icon.`sclx`:
-Gives read/write access to offset shape scale x as `float`.
-
-* Icon.`scly`:
-Gives read/write access to offset shape scale y as `float`.
-
-* Icon.`sclz`:
-Gives read/write access to offset shape scale z as `float`.
-
-* Icon.`wirecolorr`:
-Gives read/write access to red component of the wireframe color as `int`.
-
-* Icon.`wirecolorg`:
-Gives read/write access to green component of the wireframe color as `int`.
-
-* Icon.`wirecolorb`:
-Gives read/write access to blue component of the wireframe color as `int`.
+* `wirecolorr`/`wirecolorg`/`wirecolorb`:
+Gives read/write access to color components as `int`.
