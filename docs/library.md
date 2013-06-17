@@ -18,7 +18,7 @@ The data format is the one used by Softimage, for furter details refer to [`Nurb
 Gives read only acces to the on disk file with the data.
 
 ### LibraryItem.`destroy()`
-This method destroy all the dependencies of the LibraryItem, returns True if the operation was succesful or false otherwise.
+This method destroy all the dependencies of the LibraryItem, returns `True` if the operation was succesful or `False` otherwise.
 
 rigicon.library.`items`
 -----------------------
