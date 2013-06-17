@@ -1,5 +1,15 @@
 import os
 
+CONFIG_PATH = os.path.join(os.path.dirname(__file__), "config")
+EXCEPTION = ("__init__.py")
+
+
+def get_items():
+    for filename in os.listdir(CONFIG_PATH):
+        f = os.path.join(CONFIG_PATH, filename)
+        if os.path.isfile(f) and filename not in EXCEPTION:
+            yield LibraryItem(filename.replace(".py", ""))
+
 
 class LibraryItem(object):
     def __init__(self, name):
@@ -34,11 +44,13 @@ class LibraryItem(object):
                 CONFIG_PATH, "{}.py".format(self.name))
         return self._file
 
-    def remove(self):
+    def destroy(self):
         try:
             os.remove(self.file)
+            return True
         except:
             print "ERROR: file doesnt found or in use."
+            return False
 
     def _fromfile(self):
         with open(self.file) as f:
@@ -47,12 +59,3 @@ class LibraryItem(object):
     def _tofile(self, data):
         with open(self.file, "w") as f:
             f.write(str(data))
-
-items = list()  # hold all the items on library
-CONFIG_PATH = os.path.join(os.path.dirname(__file__), "config")
-EXCEPTION = ("library_items.py", "__init__.py")
-for filename in os.listdir(CONFIG_PATH):
-    f = os.path.join(CONFIG_PATH, filename)
-    if os.path.isfile(f) and filename not in EXCEPTION:
-        item = LibraryItem(filename.replace(".py", ""))
-        items.append(item)

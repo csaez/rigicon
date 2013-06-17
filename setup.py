@@ -10,5 +10,6 @@ setup(
     description="",
     url="www.github.com/csaez/rigicon",
     license="GNU General Public License (GPLv3)",
-    install_requires=["wishlib >= 0.1.3"]
+    install_requires=["wishlib >= 0.1.3"],
+    scripts=["RigIconPlugin.py"]
 )

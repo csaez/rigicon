@@ -14,7 +14,7 @@ class GUI(QMainWindow):
 
     def Reload_OnClicked(self):
         self.ui.items_listWidget.clear()
-        for library_item in library.items:
+        for library_item in library.get_items():
             item = QtGui.QListWidgetItem(library_item.name)
             item.setFlags(QtCore.Qt.ItemIsSelectable |
                           QtCore.Qt.ItemIsEditable |
@@ -23,22 +23,19 @@ class GUI(QMainWindow):
 
     def Add_OnClicked(self):
         for curve in sisel:
-            library_item = library.LibraryItem(curve.Name)
-            library_item.data = curve.ActivePrimitive.Geometry.Get2()
-            library.items.append(library_item)
+            item = library.LibraryItem(curve.Name)
+            item.data = curve.ActivePrimitive.Geometry.Get2()
         self.Reload_OnClicked()
 
     def Remove_OnClicked(self):
         selected = str(self.ui.items_listWidget.currentItem().text())
-        for i, library_item in enumerate(library.items):
-            if library_item.name != selected:
-                continue
-            library_item.remove()
-            library.items.pop(i)
+        for item in library.get_items():
+            if item.name == selected:
+                item.destroy()
         self.Reload_OnClicked()
 
     def Rename_OnChanged(self, item):
         index = self.ui.items_listWidget.currentRow()
-        item = library.items[index]
+        item = [i for i in library.get_items()][index]
         item.name = str(self.ui.items_listWidget.currentItem().text())
         self.Reload_OnClicked()
