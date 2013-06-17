@@ -6,17 +6,15 @@ This module helps to manage curve data into the library.
 Gives acces to a list of `LibraryItems` on the library, you can add remove items using standard list methods.
 
     import rigicon.library as lib
-    
     # iterate over the library
     for item in lib.items:
         print item.name
 
-rigicon.library.`LibraryItem()`
--------------------------------
+rigicon.library.`LibraryItem(name)`
+-----------------------------------
 This class represent a library item, you should pass a `str` representing the name to the constructor.
 
     import rigicon.library as lib
-    
     # add a new LibraryItem to the library
     item = lib.LibraryItem("my_item")
     lib.items.append(item)
@@ -33,10 +31,9 @@ The data format is the one used by Softimage, for furter details refer to [Nurbs
 Gives read only acces to the on disk file with the data.
 
 ### LibraryItem.`destroy()`
-This method destroy all the dependencies of the LibraryItem, returns `True` if the operation was succesfull or `False` if it fails.
+This method destroy all the dependencies of the LibraryItem, returns `True` if the operation was succesfull, otherwise it returns `False`.
 
     import rigicon.library as lib
-    
     # remove first library item
     item = lib.items.pop(0)
     item.destroy()
