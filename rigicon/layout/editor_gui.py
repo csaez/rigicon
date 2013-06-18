@@ -1,19 +1,19 @@
 import os
 from PyQt4 import uic, QtCore, QtGui
 from sisignals import signals, muteSIEvent
-from wishlib.si import si, sisel, log, C
+from wishlib.si import si, sisel
 from wishlib.qt.QtGui import QDialog
 from .. import icon
 from .. import library
 
 
-class GUI(QDialog):
-    DEFAULT_VALUES = {"name_lineEdit": "",
-                      "connLine_label": "",
-                      "icons_comboBox": 0,
+class RigIconEditor(QDialog):
+    DEFAULT_VALUES = {"iconname_lineEdit": "",
+                      "connect_label": "",
+                      "color_button": [0, 0, 0],
+                      "shape_comboBox": 0,
                       "priority_comboBox": 0,
                       "size_spinBox": 1.0,
-                      "color_button": [0, 0, 0],
                       "posx_spinBox": 0.0,
                       "posy_spinBox": 0.0,
                       "posz_spinBox": 0.0,
@@ -23,174 +23,80 @@ class GUI(QDialog):
                       "sclx_spinBox": 1.0,
                       "scly_spinBox": 1.0,
                       "sclz_spinBox": 1.0,
-                      "params_tabWidget": False}
+                      "params_tabWidget": True}
 
     def __init__(self, parent=None):
-        super(GUI, self).__init__(parent)
+        super(RigIconEditor, self).__init__(parent)
         uifile = os.path.join(os.path.dirname(__file__), "ui", "editor.ui")
         self.ui = uic.loadUi(os.path.normpath(uifile), self)
-        # self._ConnectSignals()
-        self.Reload_OnClicked()
+        self.set_type = {str: lambda widget, value: widget.setText(value),
+                         bool: lambda widget, value: widget.setEnabled(value),
+                         int: lambda widget, value: widget.setCurrentIndex(value),
+                         float: lambda widget, value: widget.setValue(value),
+                         list: lambda widget, value: self.set_color(value)}
+        self.icons = list()
+        self._connect_signals()
+        self.reload_clicked(True)
 
-    def Reload_OnClicked(self):
-        # add icons from library
-        self.ui.icons_comboBox.clear()
-        self.ui.icons_comboBox.addItem("Custom")
-        for i in library.items:
-            self.ui.icons_comboBox.addItem(i.name)
+    def reload_clicked(self, reload_library=False):
+        if reload_library:
+            self.ui.shape_comboBox.clear()
+            self.ui.shape_comboBox.addItem("Custom")
+            for i in library.get_items():
+                self.ui.shape_comboBox.addItem(i.name)
         # set widget values
-        data_type = {str: lambda x, y: x.setText(y),
-                     bool: lambda x, y: x.setEnabled(y),
-                     int: lambda x, y: x.setCurrentIndex(y),
-                     float: lambda x, y: x.setValue(y),
-                     list: lambda x, y: self._setcolor(y)}
-        for k, v in self.DEFAULT_VALUES.iteritems():
-            f = data_type.get(type(v))
-            f(getattr(self.ui, k), v)
-        # remove me!
-        for i in self._GetActiveRigIcon():
-            for k, v in i.__dict__.iteritems():
-                if not k.startswith("_"):
-                    print getattr(i, k)
+        values = self.DEFAULT_VALUES.copy()
+        for k, v in values.iteritems():
+            function = self.set_type.get(type(v))
+            if function is not None:
+                widget = getattr(self.ui, k)
+                function(widget, v)
 
-    def Name_OnChanged(self):
-        return
-        name = str(self.ui.name_lineEdit.text())
-        if len(self.lIcon) == 1:
-            self.lIcon[0].SetName(name)
-        elif len(self.lIcon) > 1:
-            self.uiName_lineEdit.setText("MULTI")
-
-    def Library_OnClicked(self):
+    def library_clicked(self):
         si.Commands("RigIconLibrary").Execute()
 
-    def Color_OnClicked(self):
+    def color_clicked(self):
+        # get color from stylesheet
         style = str(self.ui.color_button.styleSheet())
         color = list(eval(style.split("rgb")[-1][:-1]))
+        # launch color picker
         color_dialog = QtGui.QColorDialog(self)
         color_dialog.setCurrentColor(QtGui.QColor(*color))
         color_dialog.exec_()
         color = list(color_dialog.currentColor().getRgb())[:-1]
-        self._setcolor(color)
-        # color = map(lambda x: x / 255.0, color)
-        # for i in self.lIcon:
-            # i.wirecolorr = color[0]
-            # i.wirecolorg = color[1]
-            # i.wirecolorb = color[2]
+        self.set_color(color)
 
-    def Priority_OnChanged(self, p_iValue):
-        return
-        for i in self.lIcon:
-            i.priority = float(p_iValue)
+    def set_color(self, color):
+        # set color via stylesheet
+        style = "background-color: rgb({0}, {1}, {2});".format(*color)
+        self.ui.color_button.setStyleSheet(style)
 
-    def Icon_OnChanged(self, p_sIcon):
-        return
-        for i in self.lIcon:
-            sIcon = str(i.icon)
-            oItem = self.oLibrary.GetItemByName(str(p_sIcon))
-            if oItem.GetName().lower() != sIcon.lower():
-                i.icon = oItem.GetName()
-
-    def SpinBox_OnChanged(self, p_sWidget):
-        return
-        sParam = p_sWidget[2:].split("_")[0].lower()
-        for i in self.lIcon:
-            setattr(i, sParam, getattr(self, p_sWidget).value())
-
-    def Selection_OnChanged(self):
-        return
-        log("onSelectionChange event activated by csRigEditor", C.siVerbose)
-        if self._GetActiveRigIcon():
-            self.Reload_OnClicked()
-
-    def LineTarget_OnClicked(self, sLabel=""):
-        return
-        oPick = si.PickElement(C.siObjectFilter)("PickedElement")
-        if oPick:
-            for i in self.lIcon:
-                i.connect = oPick
-        self.Reload_OnClicked()
-
-    def Behaviour_OnChanged(self, p_iValue):
-        return
-        sBehaviour = ""
-        if self.uiScaling_checkBox.isChecked():
-            sBehaviour += "s"
-        if self.uiRotation_checkBox.isChecked():
-            sBehaviour += "r"
-        if self.uiTranslation_checkBox.isChecked():
-            sBehaviour += "t"
-        for i in self.lIcon:
-            i.behaviour = sBehaviour
-
-    def Stylize_OnClicked(self):
-        return
-        for i in self.lIcon:
-            i.Stylize(self.uiColor_checkBox.isChecked(),
-                      self.uiIcon_checkBox.isChecked())
-
-    def AutoRefresh_OnChanged(self, p_bState):
-        return
+    def autoreload_changed(self, p_bState):
         muteSIEvent("siSelectionChange", not p_bState)
 
     def closeEvent(self, event):
-        return
         muteSIEvent("siSelectionChange", True)
-        super(GUI, self).closeEvent(event)
+        super(RigIconEditor, self).closeEvent(event)
 
-    def _ConnectSignals(self):
-        return
+    def _connect_signals(self):
         # connect siSelectionChange signal
-        signals.siSelectionChange.connect(self.Selection_OnChanged)
-        bState = self.uiAutoReload_checkBox.isChecked()
-        muteSIEvent("siSelectionChange", not bState)
+        # signals.siSelectionChange.connect(self.reload_clicked)
+        # bState = self.ui.autoreload_checkBox.isChecked()
+        # muteSIEvent("siSelectionChange", not bState)
         # connect spinbox signal
-        for sSpinBox in filter(lambda x: "_spinBox" in x, self.DEFAULT_VALUES.keys()):
-            oWidget = getattr(self, sSpinBox)
-            func = lambda y=sSpinBox: self.SpinBox_OnChanged(y)
-            QtCore.QObject.connect(oWidget,
-                                   QtCore.SIGNAL("editingFinished()"),
-                                   func)
+        for spinbox in filter(lambda x: "_spinBox" in x, self.DEFAULT_VALUES.keys()):
+            widget = getattr(self, spinbox)
+            QtCore.QObject.connect(widget, QtCore.SIGNAL("editingFinished()"),
+                                   lambda y=spinbox: self.spinbox_changed(y))
 
-    def _setcolor(self, p_lColor):
-        sStyle = "background-color: rgb({0}, {1}, {2});".format(*p_lColor)
-        self.ui.color_button.setStyleSheet(sStyle)
+    def spinbox_changed(self, widget_name):
+        attr = widget_name.split("_")[0].lower()
+        for i in self.icons:
+            setattr(i, attr, getattr(self, widget_name).value())
 
-    def _GetActiveRigIcon(self):
-        # return
+    def get_icons(self):
+        self.icons = list()
         for x in sisel:
-            item = icon.Icon(x)
-            if item is not None:
-                yield item
-        # return [x for i in sisel if icon.Icon(i) is not None]
-        # lSel = map(lambda x: RigIcon(x), sisel)
-        # lSel = filter(lambda x: x.IsValid(), lSel)
-        # return lSel
-
-    def _GetData(self, p_oIcon):
-        return
-        dData = self.DEFAULT_VALUES.copy()
-        for sKey in dData.keys():
-            oValue = None
-            if "_spinBox" in sKey:
-                oValue = getattr(p_oIcon, sKey[2:].split("_")[0].lower())
-            elif "uiIcons_comboBox" in sKey:
-                lItems = map(lambda x: x.GetName(), self.oLibrary.GetItems())
-                try:
-                    oValue = lItems.index(str(p_oIcon.icon)) + 1
-                except:
-                    oValue = 0  # set to custom
-            elif "uiPriority_comboBox" in sKey:
-                oValue = p_oIcon.priority
-            elif "_lineEdit" in sKey:
-                oValue = p_oIcon.GetName()
-            elif "_button" in sKey:
-                oValue = [
-                    p_oIcon.wirecolorr, p_oIcon.wirecolorg, p_oIcon.wirecolorb]
-                oValue = map(lambda x: int(x * 255), oValue)
-            elif "_frame" in sKey:
-                oValue = p_oIcon != None
-            elif "_label" in sKey:
-                oValue = str(p_oIcon.connect)
-            dData[sKey] = oValue
-        return dData
+            if icon.is_icon(x):
+                self.icons.append(icon.Icon(x))
+        return self.icons

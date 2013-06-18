@@ -5,9 +5,9 @@ from wishlib.si import sisel
 from .. import library
 
 
-class GUI(QMainWindow):
+class RigIconLibrary(QMainWindow):
     def __init__(self, parent=None):
-        super(GUI, self).__init__(parent)
+        super(RigIconLibrary, self).__init__(parent)
         uifile = os.path.join(os.path.dirname(__file__), "ui", "library.ui")
         self.ui = uic.loadUi(os.path.normpath(uifile), self)
         self.Reload_OnClicked()
