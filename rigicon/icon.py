@@ -1,8 +1,10 @@
 from wishlib.si import si, SIWrapper
+from . import library
 
-DEFAULT_DATA = {"icon": "Null", "connect": None,
+DEFAULT_DATA = {"shape": "Null",
+                "connect": None,
                 "priority": 0, "size": 1.0,
-                "_wirecolorr": 1.0, "_wirecolorg": 0.882, "_wirecolorb": 0.0,
+                "wirecolorr": 1.0, "wirecolorg": 0.882, "wirecolorb": 0.0,
                 "posx": 0.0, "posy": 0.0, "posz": 0.0,
                 "rotx": 0.0, "roty": 0.0, "rotz": 0.0,
                 "sclx": 1.0, "scly": 1.0, "sclz": 1.0,
@@ -19,6 +21,7 @@ def is_icon(obj):
 
 
 class Icon(SIWrapper):
+
     @classmethod
     def create(cls, name="rig_icon"):
         obj = si.ActiveSceneRoot.AddNurbsCurve()
@@ -33,44 +36,59 @@ class Icon(SIWrapper):
 
     def __init__(self, obj):
         super(Icon, self).__init__(obj, PROPERTY_NAME)
-        self.wirecolorr = property(lambda: self._get_color("wirecolorr"),
-                                   lambda x: self._set_color("wirecolorr", x))
-        self.wirecolorg = property(lambda: self._get_color("wirecolorg"),
-                                   lambda x: self._set_color("wirecolorg", x))
-        self.wirecolorb = property(lambda: self._get_color("wirecolorb"),
-                                   lambda x: self._set_color("wirecolorb", x))
         for k, v in DEFAULT_DATA.iteritems():
             if not hasattr(self, k):
                 setattr(self, k, v)
 
     @property
-    def icon_name(self):
-        if not hasattr(self, "_icon_name"):
-            self._icon_name = self.obj.Name
-        return self._icon_name
+    def iconname(self):
+        if not hasattr(self, "_iconname"):
+            self._iconname = self.obj.Name
+        return self._iconname
 
-    @icon_name.setter
-    def icon_name(self, value):
+    @iconname.setter
+    def iconname(self, value):
         self._icon_name = value
-        self.obj.Name = self._icon_name
+        self.obj.Name = self._iconname
 
-    def set_position(self, x, y, z):
-        self.posx, self.posy, self.posz = x, y, z
+    @property
+    def shape(self):
+        return self._shape
 
-    def set_rotation(self, x, y, z):
-        self.rotx, self.roty, self.rotz = x, y, z
+    @shape.setter
+    def shape(self, value):
+        item = [x for x in library.get_items() if x.name == value]
+        if not len(item):
+            print "ERROR:", value, "doesnt found on library."
+            return
+        item = item[0]
+        self._shape = value
+        si.FreezeObj(self.obj)
+        self.obj.ActivePrimitive.Geometry.Set(*item.data)
 
-    def set_scale(self, x, y, z):
-        self.sclx, self.scly, self.sclz = x, y, z
+    @property
+    def wirecolorr(self):
+        return self._wirecolorr
 
-    def set_wirecolor(self, r, g, b):
-        self.wirecolorr, self.wirecolorg, self.wirecolorb = r, g, b
+    @wirecolorr.setter
+    def wirecolorr(self, value):
+        self.obj.Properties("Display").Parameters("wirecolorr").Value = value
+        self._wirecolorr = value
 
-    def _get_color(self, key):
-        setattr(self, "_{}".format(key),
-                self.obj.Properties("Display").Parameters(key).Value)
-        return getattr(self, "_{}".format(key))
+    @property
+    def wirecolorg(self):
+        return self._wirecolorg
 
-    def _set_color(self, key, value):
-        setattr("_{}".format(key), value)
-        self.obj.Properties("Display").Parameters(key).Value = value
+    @wirecolorg.setter
+    def wirecolorg(self, value):
+        self.obj.Properties("Display").Parameters("wirecolorg").Value = value
+        self._wirecolorg = value
+
+    @property
+    def wirecolorb(self):
+        return self._wirecolorb
+
+    @wirecolorb.setter
+    def wirecolorb(self, value):
+        self.obj.Properties("Display").Parameters("wirecolorb").Value = value
+        self._wirecolorb = value
