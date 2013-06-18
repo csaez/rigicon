@@ -21,13 +21,16 @@ def is_icon(obj):
 
 
 class Icon(SIWrapper):
-
     @classmethod
-    def create(cls, name="rig_icon"):
+    def create(cls, name="rigicon", **options):
         obj = si.ActiveSceneRoot.AddNurbsCurve()
         obj.AddProperty("Display Property")
         obj.Name = name
-        return cls(obj)
+        icon = cls(obj)
+        for k, v in options.iteritems():
+            if hasattr(icon, k):
+                setattr(icon, k, v)
+        return icon
 
     def __new__(cls, obj):
         if obj.Type == "crvlist":
@@ -57,7 +60,7 @@ class Icon(SIWrapper):
 
     @shape.setter
     def shape(self, value):
-        item = [x for x in library.get_items() if x.name == value]
+        item = [x for x in library.get_items() if x.name.lower() == value.lower()]
         if not len(item):
             print "ERROR:", value, "doesnt found on library."
             return
