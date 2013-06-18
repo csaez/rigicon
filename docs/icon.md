@@ -13,33 +13,38 @@ The constructor is expecting a softimage object, if the softimage object type is
     sisel = Application.Selection
     Icon(sisel(0))
 
-### Icon.`create(name="rig_icon")`:
-This classmethod create a new `Icon` instance, it expect a `str` to use it as the name.
+### Icon.`create(name="rigicon", **options)`:
+This classmethod create a new `Icon` instance, it expect a `str` to use it as the name and a keyword parameter representing any attribute value you want to set on creation.
 
-### Icon.`set_position(x, y, z)`:
-Set shape offset position where `x`, `y` and `z` are `float` representing the coordinates.
+    from rigicon.icon import Icon
+    
+    # create a new icon passing some parameters
+    icon = Icon.create("my_icon", shape="box", size=0.5)
+    
+    # the line above is a shortcut for...
+    icon = Icon.create("my_icon")
+    icon.shape = "box"
+    icon.size = 0.5
 
-### Icon.`set_rotation(x, y, z)`:
-Set shape offset scale where `x`, `y` and `z` are `float` representing the rotation components (degrees).
+### Icon.`iconname`
+Gives read/write access to icon's name as `str`.
 
-### Icon.`set_scale(x, y, z)`:
-Set shape offset shape scale where `x`, `y` and `z` are `float` representing the scale components.
+### Icon.`shape`
+Gives read/write access to icon geometric shape as `str`, the name should correspond to the name of some item on the library.
 
-### Icon.`set_wirecolor(r, g, b)`:
-Set wireframe color where `r`, `g` and `b` are `int` representing the color components.
+### Icon.`connect`
+The rigicon object will draw an interactive line (opengl) to this target.
+Gives read/write access as a `softimage x3dobject instance`.
 
-#### Attributes:
-* `icon_name`:
-Gives read-only access to the icon's name as `str`.
 
-* `posx`/`posy`/`posz`:
+### Icon.`posx`/`posy`/`posz`
 Gives read/write access to offset shape position coords as `float`.
 
-* `rotx`/`roty`/`rotz`:
+### Icon.`rotx`/`roty`/`rotz`
 Gives read/write access to offset shape rotation coords as `float`.
 
-* `sclx`/`scly`/`sclz`:
+### Icon.`sclx`/`scly`/`sclz`
 Gives read/write access to offset shape scale coords as `float`.
 
-* `wirecolorr`/`wirecolorg`/`wirecolorb`:
-Gives read/write access to color components as `int`.
+### Icon.`wirecolorr`/`wirecolorg`/`wirecolorb`
+Gives read/write access to normalized color components as `int`.
