@@ -1,4 +1,4 @@
-from wishlib.si import sianchor, log, C
+from wishlib.si import log, C, show_qt
 
 
 def XSILoadPlugin(in_reg):
@@ -23,8 +23,7 @@ def RigIconLibrary_Execute():
     log("csRigIconLibrary_Execute called", C.siVerbose)
     import rigicon.layout.library_gui as library
     reload(library)
-    oDialog = library.GUI(sianchor())
-    oDialog.show()
+    show_qt(library.RigIconLibrary)
     return True
 
 
@@ -32,8 +31,7 @@ def RigIconEditor_Execute():
     log("csRigIconEditor_Execute called", C.siVerbose)
     import rigicon.layout.editor_gui as editor
     reload(editor)
-    oDialog = editor.GUI(sianchor())
-    oDialog.show()
+    show_qt(editor.RigIconEditor)
     return True
 
 
