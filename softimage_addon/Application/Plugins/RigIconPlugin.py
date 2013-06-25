@@ -21,30 +21,27 @@ def XSIUnloadPlugin(in_reg):
 
 def RigIconLibrary_Execute():
     log("csRigIconLibrary_Execute called", C.siVerbose)
-    import rigicon.layout.library_gui as library
-    reload(library)
-    show_qt(library.RigIconLibrary)
+    from rigicon.layout.library_gui import RigIconLibrary
+    show_qt(RigIconLibrary)
     return True
 
 
 def RigIconEditor_Execute():
     log("csRigIconEditor_Execute called", C.siVerbose)
-    import rigicon.layout.editor_gui as editor
-    reload(editor)
-    show_qt(editor.RigIconEditor)
+    from rigicon.layout.editor_gui import RigIconEditor
+    show_qt(RigIconEditor)
     return True
 
 
 def RigIcon_Execute():
     log("csRigIconLibrary_Execute called", C.siVerbose)
-    import rigicon.icon as icon
-    reload(icon)
-    icon.Icon.create()
+    from rigicon.icon import Icon
+    Icon.create()
     return True
 
 
 def RigIcon_Match(in_ctxt):
     log("csRigIconFilter_Match called", C.siVerbose)
     obj = in_ctxt.GetAttribute("Input")
-    import rigicon.icon as icon
-    return icon.is_icon(obj)
+    from rigicon.icon import is_icon
+    return is_icon(obj)
