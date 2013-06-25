@@ -2,12 +2,11 @@ from collections import OrderedDict
 from wishlib.si import disp, si, siget, SIWrapper, no_inspect
 from . import library
 
-DEFAULT_DATA = {"priority": 0, "size": 1.0,
+DEFAULT_DATA = {"size": 1.0, "shape": "Null", "connect": None,
                 "colorr": 1.0, "colorg": 0.882, "colorb": 0.0,
                 "posx": 0.0, "posy": 0.0, "posz": 0.0,
                 "rotx": 0.0, "roty": 0.0, "rotz": 0.0,
-                "sclx": 1.0, "scly": 1.0, "sclz": 1.0,
-                "behaviour": "srt", "shape": "Null", "connect": ""}
+                "sclx": 1.0, "scly": 1.0, "sclz": 1.0}
 PROPERTY_NAME = "RigIcon_Data"
 APPLYTRANSFORM_COMPOUND = "RigIcon__ApplyTransform"
 CONNECT_COMPOUND = "RigIcon__ConnectionLine"
@@ -119,16 +118,15 @@ class Icon(SIWrapper):
 
     @property
     def connect(self):
-        param = siget("{0}.{1}.Reference".format(self.connect_op.FullName,
-                                                 CONNECT_COMPOUND))
-        return siget(param.Value)
+        return self._connect
 
     @connect.setter
     def connect(self, obj):
+        self._connect = obj
         param = siget("{0}.{1}.Reference".format(self.connect_op.FullName,
                                                  CONNECT_COMPOUND))
         try:
-            param.Value = str(obj.FullName)
+            param.Value = str(self._connect.FullName)
         except:
             param.Value = ""
 

@@ -1,14 +1,14 @@
 import os
 from PyQt4 import uic, QtCore, QtGui
 from sisignals import signals, muteSIEvent
-from wishlib.si import si, sisel
+from wishlib.si import si, sisel, siget
 from wishlib.qt.QtGui import QDialog
 from .. import icon
 from .. import library
 
 
 class RigIconEditor(QDialog):
-    DEFAULT_VALUES = {"iconname_lineEdit": "nothing here",
+    DEFAULT_VALUES = {"iconname_lineEdit": "",
                       "connect_label": "",
                       "shape_comboBox": 0,
                       "size_spinBox": 1.0,
@@ -78,6 +78,13 @@ class RigIconEditor(QDialog):
         for rigicon in self.icons:
             rigicon.shape = self.library_items[index].name
 
+    def connection_clicked(self):
+        picked = si.PickObject()("PickedElement")
+        # set shape to every icon
+        for each in self.icons:
+            each.connect = picked
+            self.ui.connect_label.setText(str(picked))
+
     # HELPER FUNCTIONS
     def closeEvent(self, event):
         muteSIEvent("siSelectionChange", True)
@@ -94,18 +101,20 @@ class RigIconEditor(QDialog):
             QtCore.QObject.connect(widget, QtCore.SIGNAL("editingFinished()"),
                                    lambda y=spinbox: self.spinbox_changed(y))
 
-    def get_data(self, rigicon):
+    def get_data(self, icon):
         data = self.DEFAULT_VALUES.copy()
         for k, v in data.iteritems():
             attr = k.split("_")[0]
             if attr == "shape":
                 items = [i.name.lower() for i in self.library_items]
-                value = items.index(rigicon.shape) + 1
+                value = items.index(icon.shape) + 1
             elif attr == "color":
-                value = [rigicon.colorr, rigicon.colorg, rigicon.colorb]
+                value = [icon.colorr, icon.colorg, icon.colorb]
                 value = map(lambda x: int(x * 255), value)
+            elif attr == "connect":
+                value = str(icon.connect)
             else:
-                value = getattr(rigicon, attr)
+                value = getattr(icon, attr)
             data[k] = value
         return data
 
@@ -116,4 +125,4 @@ class RigIconEditor(QDialog):
         # set rigicon color
         for rigicon in self.icons:
             for i, attr in enumerate(("colorr", "colorg", "colorb")):
-                setattr(rigicon, attr, color[i]/255.0)
+                setattr(rigicon, attr, color[i] / 255.0)

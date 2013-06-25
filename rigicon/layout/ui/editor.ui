@@ -633,6 +633,22 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>connect_button</sender>
+   <signal>clicked()</signal>
+   <receiver>Dialog</receiver>
+   <slot>connection_clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>229</x>
+     <y>272</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>270</x>
+     <y>267</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>reload_clicked()</slot>
@@ -641,5 +657,6 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
   <slot>name_changed()</slot>
   <slot>autoreload_changed()</slot>
   <slot>shape_changed()</slot>
+  <slot>connection_clicked()</slot>
  </slots>
 </ui>
