@@ -1,7 +1,7 @@
 import os
 from PyQt4 import uic, QtCore, QtGui
 from sisignals import signals, muteSIEvent
-from wishlib.si import si, sisel, siget
+from wishlib.si import si, sisel
 from wishlib.qt.QtGui import QDialog
 from .. import icon
 from .. import library
