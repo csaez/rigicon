@@ -5,10 +5,12 @@ EXCEPTION = ("__init__.py")
 
 
 def get_items():
+    items = list()
     for filename in os.listdir(CONFIG_PATH):
         f = os.path.join(CONFIG_PATH, filename)
         if os.path.isfile(f) and filename not in EXCEPTION:
-            yield LibraryItem(filename.replace(".py", ""))
+            items.append(LibraryItem(filename.replace(".py", "")))
+    return items
 
 
 class LibraryItem(object):
