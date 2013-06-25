@@ -3,7 +3,7 @@
 This module helps to manage curve data into the library.
 
 ### rigicon.library.`get_items()`
-Returns a generator for the `LibraryItems` on the system.
+Returns a `liist` of `LibraryItems` on the system.
 
     from rigicon import library
     for item in library.get_items():
