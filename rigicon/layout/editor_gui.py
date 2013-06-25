@@ -8,21 +8,21 @@ from .. import library
 
 
 class RigIconEditor(QDialog):
-    DEFAULT_VALUES = {"iconname_lineEdit": "",
+    DEFAULT_VALUES = {"iconname_lineEdit": "nothing here",
                       "connect_label": "",
                       "shape_comboBox": 0,
-                      "priority_comboBox": 0,
                       "size_spinBox": 1.0,
                       "color_button": [0, 0, 0],
                       "posx_spinBox": 0.0, "posy_spinBox": 0.0, "posz_spinBox": 0.0,
                       "rotx_spinBox": 0.0, "roty_spinBox": 0.0, "rotz_spinBox": 0.0,
-                      "sclx_spinBox": 1.0, "scly_spinBox": 1.0, "sclz_spinBox": 1.0,
-                      "params_tabWidget": True}
+                      "sclx_spinBox": 1.0, "scly_spinBox": 1.0, "sclz_spinBox": 1.0}
 
     def __init__(self, parent=None):
         super(RigIconEditor, self).__init__(parent)
         uifile = os.path.join(os.path.dirname(__file__), "ui", "editor.ui")
         self.ui = uic.loadUi(os.path.normpath(uifile), self)
+        self.library_items = library.get_items()
+        self.icons = list()
         # func to set widget value by type
         self.set_type = {str: lambda widget, value: widget.setText(value),
                          bool: lambda widget, value: widget.setEnabled(value),
@@ -30,16 +30,19 @@ class RigIconEditor(QDialog):
                          float: lambda widget, value: widget.setValue(value),
                          list: lambda widget, value: self.set_color(value)}
         # fill gui values
-        # self.ui.params_tabWidget.setEnabled(False)
+        # self.ui.params_tabWidget.setEnabled(True)
         self.ui.shape_comboBox.clear()
         self.ui.shape_comboBox.addItem("Custom")
-        for i in library.get_items():
+        for i in self.library_items:
             self.ui.shape_comboBox.addItem(i.name)
         # connect signals and load values using selection
         self._connect_signals()
-        self.selection_changed()
+        self.reload_clicked()
 
+    # SLOTS
     def reload_clicked(self):
+        if sisel.Count:
+            self.icons = [icon.Icon(x) for x in sisel if icon.is_icon(x)]
         # set widget values
         for each in self.icons:
             for key, value in self.get_data(each).iteritems():
@@ -62,28 +65,27 @@ class RigIconEditor(QDialog):
         color = list(color_dialog.currentColor().getRgb())[:-1]
         self.set_color(color)
 
-    def set_color(self, color):
-        # set color via stylesheet
-        style = "background-color: rgb({0}, {1}, {2});".format(*color)
-        self.ui.color_button.setStyleSheet(style)
+    def autoreload_changed(self, state):
+        muteSIEvent("siSelectionChange", not state)
 
-    def autoreload_changed(self, p_bState):
-        muteSIEvent("siSelectionChange", not p_bState)
+    def spinbox_changed(self, widget_name):
+        attr = widget_name.split("_")[0].lower()
+        for i in self.icons:
+            setattr(i, attr, getattr(self, widget_name).value())
 
-    def selection_changed(self):
-        self.get_icons()
-        if len(self.icons):
-            self.reload_clicked()
-        else:
-            self.ui.params_tabWidget.setEnabled(False)
+    def shape_changed(self, index):
+        index = index - 1
+        for rigicon in self.icons:
+            rigicon.shape = self.library_items[index].name
 
+    # HELPER FUNCTIONS
     def closeEvent(self, event):
         muteSIEvent("siSelectionChange", True)
         self.close()
 
     def _connect_signals(self):
         # connect siSelectionChange signal
-        signals.siSelectionChange.connect(self.selection_changed)
+        signals.siSelectionChange.connect(self.reload_clicked)
         bState = self.ui.autoreload_checkBox.isChecked()
         muteSIEvent("siSelectionChange", not bState)
         # connect spinbox signal
@@ -92,23 +94,26 @@ class RigIconEditor(QDialog):
             QtCore.QObject.connect(widget, QtCore.SIGNAL("editingFinished()"),
                                    lambda y=spinbox: self.spinbox_changed(y))
 
-    def spinbox_changed(self, widget_name):
-        attr = widget_name.split("_")[0].lower()
-        for i in self.icons:
-            setattr(i, attr, getattr(self, widget_name).value())
-
-    def get_icons(self):
-        self.icons = [icon.Icon(x) for x in sisel if icon.is_icon(x)]
-        return self.icons
-
     def get_data(self, rigicon):
         data = self.DEFAULT_VALUES.copy()
         for k, v in data.iteritems():
             attr = k.split("_")[0]
-            if hasattr(rigicon, attr):
+            if attr == "shape":
+                items = [i.name.lower() for i in self.library_items]
+                value = items.index(rigicon.shape) + 1
+            elif attr == "color":
+                value = [rigicon.colorr, rigicon.colorg, rigicon.colorb]
+                value = map(lambda x: int(x * 255), value)
+            else:
                 value = getattr(rigicon, attr)
-                if attr == "shape":
-                    items = [i.name.lower() for i in library.get_items()]
-                    value = items.index(value) + 1
-                data[k] = value
+            data[k] = value
         return data
+
+    def set_color(self, color):
+        # set color via stylesheet
+        style = "background-color: rgb({0}, {1}, {2});".format(*color)
+        self.ui.color_button.setStyleSheet(style)
+        # set rigicon color
+        for rigicon in self.icons:
+            for i, attr in enumerate(("colorr", "colorg", "colorb")):
+                setattr(rigicon, attr, color[i]/255.0)
