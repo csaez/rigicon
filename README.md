@@ -17,4 +17,4 @@ Once it's installed copy `softimage_addon` contents to a softimage plugin direct
 
 Ussage
 ------
-Refer to the [documentation](https://github.com/csaez/rigicon/blob/master/docs/toc.md).
+Refer to the [documentation](https://github.com/csaez/rigicon/wiki).
