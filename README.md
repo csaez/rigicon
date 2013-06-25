@@ -9,12 +9,12 @@ Requirements / Dependencies
 
 Installation
 ------------
-You can get a .xsiaddon file from [here](#) or get the package from the Python Package Index.
-
-Once it's installed just copy `RigIconPlugin.py` to a softimage plugin directory.
+You can get a pre-packed xsiaddon from [here](#) or get the package from the Python Package Index.
 
     pip install rigicon
 
+Once it's installed copy `softimage_addon` contents to a softimage plugin directory.
+
 Ussage
 ------
-Refer to docs.
+Refer to the [documentation](https://github.com/csaez/rigicon/blob/master/docs/toc.md).

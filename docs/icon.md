@@ -21,7 +21,7 @@ This classmethod create a new `Icon` instance, it expect a `str` to use it as th
     # create a new icon passing some parameters
     icon = Icon.create("my_icon", shape="box", size=0.5)
     
-    # the line above is a shortcut for...
+    # the line above is a shortcut for:
     icon = Icon.create("my_icon")
     icon.shape = "box"
     icon.size = 0.5
@@ -46,5 +46,5 @@ Gives read/write access to offset shape rotation coords as `float`.
 ### Icon.`sclx`/`scly`/`sclz`
 Gives read/write access to offset shape scale coords as `float`.
 
-### Icon.`wirecolorr`/`wirecolorg`/`wirecolorb`
+### Icon.`colorr`/`colorg`/`colorb`
 Gives read/write access to normalized color components as `int`.
