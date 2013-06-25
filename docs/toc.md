@@ -9,13 +9,13 @@ Dependencies
 
 Installation
 ------------
-You can get a .xsiaddon file from [here](#) or get the package from the Python Package Index.
+You can get a pre-packed xsiaddon from [here](#) or get the package from the Python Package Index.
 
     pip install rigicon
 
-Once it's installed just copy `RigIconPlugin.py` to a softimage plugin directory.
+Once it's installed copy `softimage_addon` contents to a softimage plugin directory.
 
 Technical documentation
 -----------------------
-* [Icon Module](icon.md) — API to create and edit rigicons.
-* [Library Module](library.md) — Library management.
+* [Icon module](icon.md) — API to create and edit rigicons.
+* [Library module](library.md) — Library management.
