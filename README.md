@@ -13,7 +13,7 @@ You can get a pre-packed xsiaddon from [here](#) or get the package from the Pyt
 
     pip install rigicon
 
-Once it's installed copy `softimage_addon` contents to a softimage plugin directory.
+Once it's installed copy `RigIconPlugin.py` file to a softimage plugin directory.
 
 Ussage
 ------

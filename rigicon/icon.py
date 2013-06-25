@@ -1,3 +1,4 @@
+import os
 from collections import OrderedDict
 from wishlib.si import disp, si, siget, SIWrapper, no_inspect
 from . import library
@@ -24,6 +25,7 @@ def is_icon(obj):
 
 
 class Icon(SIWrapper):
+
     @classmethod
     def create(cls, name="rigicon", **options):
         obj = si.ActiveSceneRoot.AddNurbsCurve()
@@ -107,14 +109,13 @@ class Icon(SIWrapper):
         self._colorb = value
 
     @property
-    @no_inspect
     def apply_transform(self):
         # find and return the ICETree
         for icetree in self.obj.ActivePrimitive.ICETrees:
             if icetree.Name == APPLYTRANSFORM_COMPOUND:
                 return icetree
         # icetree doesnt found, return a new one
-        return si.ApplyICEOp(APPLYTRANSFORM_COMPOUND, self.obj)
+        return self._addICETree(APPLYTRANSFORM_COMPOUND)
 
     @property
     def connect(self):
@@ -131,9 +132,15 @@ class Icon(SIWrapper):
             param.Value = ""
 
     @property
-    @no_inspect
     def connect_op(self):
         for icetree in self.obj.ActivePrimitive.ICETrees:
             if icetree.Name == CONNECT_COMPOUND:
                 return icetree
-        return si.ApplyICEOp(CONNECT_COMPOUND, self.obj)
+        return self._addICETree(CONNECT_COMPOUND)
+
+    @no_inspect
+    def _addICETree(self, compound_name):
+        compound_file = os.path.join(os.path.dirname(__file__), "data",
+                                     "compounds", compound_name + ".xsicompound")
+        compound_file = os.path.normpath(compound_file)
+        return si.ApplyICEOp(compound_file, self.obj)
