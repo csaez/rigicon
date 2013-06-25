@@ -54,12 +54,12 @@ class Icon(SIWrapper):
     @property
     def iconname(self):
         if not hasattr(self, "_iconname"):
-            self._iconname = self.obj.Name
+            self._iconname = str(self.obj.Name)
         return self._iconname
 
     @iconname.setter
     def iconname(self, value):
-        self._icon_name = value
+        self._iconname = value
         self.obj.Name = self._iconname
 
     @property
@@ -128,9 +128,9 @@ class Icon(SIWrapper):
         param = siget("{0}.{1}.Reference".format(self.connect_op.FullName,
                                                  CONNECT_COMPOUND))
         try:
-            param.Value = obj.FullName
+            param.Value = str(obj.FullName)
         except:
-            param.value = ""
+            param.Value = ""
 
     @property
     @no_inspect
