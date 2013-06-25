@@ -1,7 +1,6 @@
 RigIcon
 =======
-A simple icon library for Softimage, a convenient tool to
-store and manage curves to use as animation controls in your rigs.
+A simple icon library for Softimage, a convenient tool to create, edit and manage curves/animation-controls for your rigs.
 
 Dependencies
 ------------
