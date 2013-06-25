@@ -10,47 +10,43 @@ from .. import library
 class RigIconEditor(QDialog):
     DEFAULT_VALUES = {"iconname_lineEdit": "",
                       "connect_label": "",
-                      "color_button": [0, 0, 0],
                       "shape_comboBox": 0,
                       "priority_comboBox": 0,
                       "size_spinBox": 1.0,
-                      "posx_spinBox": 0.0,
-                      "posy_spinBox": 0.0,
-                      "posz_spinBox": 0.0,
-                      "rotx_spinBox": 0.0,
-                      "roty_spinBox": 0.0,
-                      "rotz_spinBox": 0.0,
-                      "sclx_spinBox": 1.0,
-                      "scly_spinBox": 1.0,
-                      "sclz_spinBox": 1.0,
+                      "color_button": [0, 0, 0],
+                      "posx_spinBox": 0.0, "posy_spinBox": 0.0, "posz_spinBox": 0.0,
+                      "rotx_spinBox": 0.0, "roty_spinBox": 0.0, "rotz_spinBox": 0.0,
+                      "sclx_spinBox": 1.0, "scly_spinBox": 1.0, "sclz_spinBox": 1.0,
                       "params_tabWidget": True}
 
     def __init__(self, parent=None):
         super(RigIconEditor, self).__init__(parent)
         uifile = os.path.join(os.path.dirname(__file__), "ui", "editor.ui")
         self.ui = uic.loadUi(os.path.normpath(uifile), self)
+        # func to set widget value by type
         self.set_type = {str: lambda widget, value: widget.setText(value),
                          bool: lambda widget, value: widget.setEnabled(value),
                          int: lambda widget, value: widget.setCurrentIndex(value),
                          float: lambda widget, value: widget.setValue(value),
                          list: lambda widget, value: self.set_color(value)}
-        self.icons = list()
+        # fill gui values
+        # self.ui.params_tabWidget.setEnabled(False)
+        self.ui.shape_comboBox.clear()
+        self.ui.shape_comboBox.addItem("Custom")
+        for i in library.get_items():
+            self.ui.shape_comboBox.addItem(i.name)
+        # connect signals and load values using selection
         self._connect_signals()
-        self.reload_clicked(True)
+        self.selection_changed()
 
-    def reload_clicked(self, reload_library=False):
-        if reload_library:
-            self.ui.shape_comboBox.clear()
-            self.ui.shape_comboBox.addItem("Custom")
-            for i in library.get_items():
-                self.ui.shape_comboBox.addItem(i.name)
+    def reload_clicked(self):
         # set widget values
-        values = self.DEFAULT_VALUES.copy()
-        for k, v in values.iteritems():
-            function = self.set_type.get(type(v))
-            if function is not None:
-                widget = getattr(self.ui, k)
-                function(widget, v)
+        for each in self.icons:
+            for key, value in self.get_data(each).iteritems():
+                widget = getattr(self.ui, key)
+                function = self.set_type.get(type(value))
+                if function is not None:
+                    function(widget, value)
 
     def library_clicked(self):
         si.Commands("RigIconLibrary").Execute()
@@ -74,15 +70,22 @@ class RigIconEditor(QDialog):
     def autoreload_changed(self, p_bState):
         muteSIEvent("siSelectionChange", not p_bState)
 
+    def selection_changed(self):
+        self.get_icons()
+        if len(self.icons):
+            self.reload_clicked()
+        else:
+            self.ui.params_tabWidget.setEnabled(False)
+
     def closeEvent(self, event):
         muteSIEvent("siSelectionChange", True)
-        super(RigIconEditor, self).closeEvent(event)
+        self.close()
 
     def _connect_signals(self):
         # connect siSelectionChange signal
-        # signals.siSelectionChange.connect(self.reload_clicked)
-        # bState = self.ui.autoreload_checkBox.isChecked()
-        # muteSIEvent("siSelectionChange", not bState)
+        signals.siSelectionChange.connect(self.selection_changed)
+        bState = self.ui.autoreload_checkBox.isChecked()
+        muteSIEvent("siSelectionChange", not bState)
         # connect spinbox signal
         for spinbox in filter(lambda x: "_spinBox" in x, self.DEFAULT_VALUES.keys()):
             widget = getattr(self, spinbox)
@@ -95,8 +98,17 @@ class RigIconEditor(QDialog):
             setattr(i, attr, getattr(self, widget_name).value())
 
     def get_icons(self):
-        self.icons = list()
-        for x in sisel:
-            if icon.is_icon(x):
-                self.icons.append(icon.Icon(x))
+        self.icons = [icon.Icon(x) for x in sisel if icon.is_icon(x)]
         return self.icons
+
+    def get_data(self, rigicon):
+        data = self.DEFAULT_VALUES.copy()
+        for k, v in data.iteritems():
+            attr = k.split("_")[0]
+            if hasattr(rigicon, attr):
+                value = getattr(rigicon, attr)
+                if attr == "shape":
+                    items = [i.name.lower() for i in library.get_items()]
+                    value = items.index(value) + 1
+                data[k] = value
+        return data
