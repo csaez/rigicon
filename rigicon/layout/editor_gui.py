@@ -23,6 +23,7 @@ class RigIconEditor(QDialog):
         self.ui = uic.loadUi(os.path.normpath(uifile), self)
         self.library_items = library.get_items()
         self.icons = list()
+        self.multi = list()  # hold common multi selection values
         # func to set widget value by type
         self.set_type = {str: lambda widget, value: widget.setText(value),
                          bool: lambda widget, value: widget.setEnabled(value),
@@ -30,7 +31,6 @@ class RigIconEditor(QDialog):
                          float: lambda widget, value: widget.setValue(value),
                          list: lambda widget, value: self.set_color(value)}
         # fill gui values
-        # self.ui.params_tabWidget.setEnabled(True)
         self.ui.shape_comboBox.clear()
         self.ui.shape_comboBox.addItem("Custom")
         for i in self.library_items:
@@ -44,12 +44,17 @@ class RigIconEditor(QDialog):
         if sisel.Count:
             self.icons = [icon.Icon(x) for x in sisel if icon.is_icon(x)]
         # set widget values
-        for each in self.icons:
-            for key, value in self.get_data(each).iteritems():
-                widget = getattr(self.ui, key)
-                function = self.set_type.get(type(value))
-                if function is not None:
-                    function(widget, value)
+        for key, value in self.get_data().iteritems():
+            widget = getattr(self.ui, key)
+            function = self.set_type.get(type(value))
+            # colorize multi widget
+            style = ""
+            if key in self.multi:
+                style = "background-color: rgb(35, 35, 35);"
+            widget.setStyleSheet(style)
+            # set widget values
+            if function is not None:
+                function(widget, value)
 
     def library_clicked(self):
         si.Commands("RigIconLibrary").Execute()
@@ -75,6 +80,8 @@ class RigIconEditor(QDialog):
 
     def shape_changed(self, index):
         index = index - 1
+        if index < 0:
+            return
         for rigicon in self.icons:
             rigicon.shape = self.library_items[index].name
 
@@ -101,24 +108,35 @@ class RigIconEditor(QDialog):
             QtCore.QObject.connect(widget, QtCore.SIGNAL("editingFinished()"),
                                    lambda y=spinbox: self.spinbox_changed(y))
 
-    def get_data(self, icon):
+    def get_data(self):
         data = self.DEFAULT_VALUES.copy()
-        for k, v in data.iteritems():
-            attr = k.split("_")[0]
-            if attr == "shape":
-                items = [i.name.lower() for i in self.library_items]
-                value = items.index(icon.shape) + 1
-            elif attr == "color":
-                value = [icon.colorr, icon.colorg, icon.colorb]
-                value = map(lambda x: int(x * 255), value)
-            elif attr == "connect":
-                value = str(icon.connect)
-            else:
-                value = getattr(icon, attr)
-            data[k] = value
+        self.multi = list()
+        for index, icon in enumerate(self.icons):
+            for k, v in data.iteritems():
+                attr = k.split("_")[0]
+                # get attr value
+                if attr == "shape":
+                    items = [i.name.lower() for i in self.library_items]
+                    value = items.index(icon.shape) + 1
+                elif attr == "color":
+                    value = [icon.colorr, icon.colorg, icon.colorb]
+                    value = map(lambda x: int(x * 255), value)
+                elif attr == "connect":
+                    value = str(icon.connect)
+                else:
+                    value = getattr(icon, attr)
+                # filter multi-selection
+                if index > 0:
+                    if value != data.get(k):
+                        value = self.DEFAULT_VALUES.get(k)
+                        self.multi.append(k)
+                # set multi-selection value
+                data[k] = value
         return data
 
     def set_color(self, color):
+        if "color_button" in self.multi:
+            return
         # set color via stylesheet
         style = "background-color: rgb({0}, {1}, {2});".format(*color)
         self.ui.color_button.setStyleSheet(style)
