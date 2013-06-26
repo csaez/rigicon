@@ -1,5 +1,5 @@
 import sys
-from wishlib.si import log, C, show_qt
+from wishlib.si import si, siget, log, C, show_qt
 
 
 def XSILoadPlugin(in_reg):
@@ -11,7 +11,7 @@ def XSILoadPlugin(in_reg):
     in_reg.RegisterCommand("RigIconLibrary", "RigIconLibrary")
     in_reg.RegisterCommand("RigIconEditor", "RigIconEditor")
     in_reg.RegisterCommand("RigIcon", "RigIcon")
-    in_reg.RegisterCommand("RigIconReloader", "RigIconReloader")
+    # in_reg.RegisterCommand("RigIconReloader", "RigIconReloader")
     in_reg.RegisterFilter("RigIcon", C.siFilter3DObject)
     return True
 
@@ -38,16 +38,18 @@ def RigIconEditor_Execute():
 def RigIcon_Execute():
     log("RigIcon_Execute called", C.siVerbose)
     from rigicon.icon import Icon
-    Icon.create()
+    icon = Icon.create()
+    if siget("preferences.modeling.selectgeneratedobj"):
+        si.SelectObj(icon.obj)
     return True
 
 
-def RigIconReloader_Execute():
-    log("RigIconReloader_Execute called", C.siVerbose)
-    for k in sys.modules.keys():
-        if k.startswith("rigicon"):
-            del sys.modules[k]
-    return True
+# def RigIconReloader_Execute():
+#     log("RigIconReloader_Execute called", C.siVerbose)
+#     for k in sys.modules.keys():
+#         if k.startswith("rigicon"):
+#             del sys.modules[k]
+#     return True
 
 
 def RigIcon_Match(in_ctxt):
