@@ -74,6 +74,7 @@ class Icon(SIWrapper):
             return
         item = [x for x in library.get_items() if x.name.lower() == value]
         if not len(item):
+            self._shape = "Custom"
             print "ERROR:", value, "doesnt found on library."
             return
         self._shape = value
