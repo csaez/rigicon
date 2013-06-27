@@ -8,7 +8,7 @@ Dependencies
 
 Installation
 ------------
-You can get a pre-packed xsiaddon from [here](https://dl.dropboxusercontent.com/u/1076274/dev/RigIcon.0.1.0.zip) or get the package from the Python Package Index.
+You can get a pre-packed xsiaddon from [here](http://goo.gl/XRtKA) or get the package from the Python Package Index.
 
     pip install rigicon
 
