@@ -117,7 +117,10 @@ class RigIconEditor(QDialog):
                 # get attr value
                 if attr == "shape":
                     items = [i.name.lower() for i in self.library_items]
-                    value = items.index(icon.shape) + 1
+                    try:
+                        value = items.index(icon.shape) + 1
+                    except:
+                        value = 0
                 elif attr == "color":
                     value = [icon.colorr, icon.colorg, icon.colorb]
                     value = map(lambda x: int(x * 255), value)
