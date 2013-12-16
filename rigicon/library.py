@@ -8,7 +8,7 @@ def get_items():
     items = list()
     for filename in os.listdir(CONFIG_PATH):
         f = os.path.join(CONFIG_PATH, filename)
-        if os.path.isfile(f) and filename not in EXCEPTION:
+        if f.endswith(".py") and filename not in EXCEPTION:
             items.append(LibraryItem(filename.replace(".py", "")))
     return items
 

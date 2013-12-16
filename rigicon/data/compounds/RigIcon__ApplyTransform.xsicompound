@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsi_file type="CompoundNode" name="RigIcon__ApplyTransform" tasks="Deformation/RigIcon" author="csaez" url="https://github.com/csaez/rigicon" formatversion="1.4" compoundversion="1.0" constructionmode="Modeling" backgroundcolor="10922155">
+<xsi_file type="CompoundNode" name="RigIcon__ApplyTransform" category="" tasks="Deformation/RigIcon" author="csaez" url="https://github.com/csaez/rigicon" formatversion="1.4" compoundversion="1.1" versiontag="wishlib >= 0.2" constructionmode="Modeling" backgroundcolor="10922155">
+	<description><![CDATA[]]></description>
 	<definition>
 		<nodes>
 			<node type="[embedded_0]" index="0">
@@ -112,15 +113,15 @@
 		</exposed_ports>
 		<connections>
 			<cnx from_node="0" from_port="Size" to_node="3" to_port="factor"> </cnx>
-			<cnx from_node="0" from_port="Rotation" to_node="4" to_port="rotation"> </cnx>
-			<cnx from_node="0" from_port="Position" to_node="6" to_port="value2"> </cnx>
 			<cnx from_node="0" from_port="Scale" to_node="5" to_port="value2"> </cnx>
-			<cnx from_node="1" from_port="Value" to_node="3" to_port="value"> </cnx>
+			<cnx from_node="0" from_port="Position" to_node="6" to_port="value2"> </cnx>
+			<cnx from_node="0" from_port="Rotation" to_node="4" to_port="rotation"> </cnx>
 			<cnx from_node="2" from_port="Execute" to_node="7" to_port="iffalse"> </cnx>
-			<cnx from_node="5" from_port="result" to_node="6" to_port="value1"> </cnx>
-			<cnx from_node="6" from_port="result" to_node="4" to_port="vector"> </cnx>
+			<cnx from_node="1" from_port="Value" to_node="3" to_port="value"> </cnx>
 			<cnx from_node="3" from_port="result" to_node="5" to_port="value1"> </cnx>
 			<cnx from_node="4" from_port="result" to_node="2" to_port="Position"> </cnx>
+			<cnx from_node="5" from_port="result" to_node="6" to_port="value1"> </cnx>
+			<cnx from_node="6" from_port="result" to_node="4" to_port="vector"> </cnx>
 		</connections>
 		<layout>
 			<item type="input" name="Mute"> </item>
@@ -599,8 +600,8 @@
 				</datablob>
 			</node>
 			<node type="GetDataNode" index="6">
-				<param name="reference" type="31" value="posx"></param>
-				<param_ext name="reference" type="31" value="posx"></param_ext>
+				<param name="reference" type="31" value="data_posx"></param>
+				<param_ext name="reference" type="31" value="data_posx"></param_ext>
 				<portdef name="source" type="2048" structure="1" group="1" instance="0" port="0"></portdef>
 				<portdef name="inname" type="8192" structure="1" group="3" instance="0" port="0"></portdef>
 				<datablob category="ui_infos">
@@ -610,8 +611,8 @@
 				</datablob>
 			</node>
 			<node type="GetDataNode" index="7">
-				<param name="reference" type="31" value="size"></param>
-				<param_ext name="reference" type="31" value="size"></param_ext>
+				<param name="reference" type="31" value="data_size"></param>
+				<param_ext name="reference" type="31" value="data_size"></param_ext>
 				<portdef name="source" type="2048" structure="1" group="1" instance="0" port="0"></portdef>
 				<portdef name="inname" type="8192" structure="1" group="3" instance="0" port="0"></portdef>
 				<datablob category="ui_infos">
@@ -632,8 +633,8 @@
 				</datablob>
 			</node>
 			<node type="GetDataNode" index="9">
-				<param name="reference" type="31" value="posy"></param>
-				<param_ext name="reference" type="31" value="posy"></param_ext>
+				<param name="reference" type="31" value="data_posy"></param>
+				<param_ext name="reference" type="31" value="data_posy"></param_ext>
 				<portdef name="source" type="2048" structure="1" group="1" instance="0" port="0"></portdef>
 				<portdef name="inname" type="8192" structure="1" group="3" instance="0" port="0"></portdef>
 				<datablob category="ui_infos">
@@ -643,8 +644,8 @@
 				</datablob>
 			</node>
 			<node type="GetDataNode" index="10">
-				<param name="reference" type="31" value="posz"></param>
-				<param_ext name="reference" type="31" value="posz"></param_ext>
+				<param name="reference" type="31" value="data_posz"></param>
+				<param_ext name="reference" type="31" value="data_posz"></param_ext>
 				<portdef name="source" type="2048" structure="1" group="1" instance="0" port="0"></portdef>
 				<portdef name="inname" type="8192" structure="1" group="3" instance="0" port="0"></portdef>
 				<datablob category="ui_infos">
@@ -654,8 +655,8 @@
 				</datablob>
 			</node>
 			<node type="GetDataNode" index="11">
-				<param name="reference" type="31" value="rotx"></param>
-				<param_ext name="reference" type="31" value="rotx"></param_ext>
+				<param name="reference" type="31" value="data_rotx"></param>
+				<param_ext name="reference" type="31" value="data_rotx"></param_ext>
 				<portdef name="source" type="2048" structure="1" group="1" instance="0" port="0"></portdef>
 				<portdef name="inname" type="8192" structure="1" group="3" instance="0" port="0"></portdef>
 				<datablob category="ui_infos">
@@ -665,8 +666,8 @@
 				</datablob>
 			</node>
 			<node type="GetDataNode" index="12">
-				<param name="reference" type="31" value="sclx"></param>
-				<param_ext name="reference" type="31" value="sclx"></param_ext>
+				<param name="reference" type="31" value="data_sclx"></param>
+				<param_ext name="reference" type="31" value="data_sclx"></param_ext>
 				<portdef name="source" type="2048" structure="1" group="1" instance="0" port="0"></portdef>
 				<portdef name="inname" type="8192" structure="1" group="3" instance="0" port="0"></portdef>
 				<datablob category="ui_infos">
@@ -676,8 +677,8 @@
 				</datablob>
 			</node>
 			<node type="GetDataNode" index="13">
-				<param name="reference" type="31" value="scly"></param>
-				<param_ext name="reference" type="31" value="scly"></param_ext>
+				<param name="reference" type="31" value="data_scly"></param>
+				<param_ext name="reference" type="31" value="data_scly"></param_ext>
 				<portdef name="source" type="2048" structure="1" group="1" instance="0" port="0"></portdef>
 				<portdef name="inname" type="8192" structure="1" group="3" instance="0" port="0"></portdef>
 				<datablob category="ui_infos">
@@ -687,8 +688,8 @@
 				</datablob>
 			</node>
 			<node type="GetDataNode" index="14">
-				<param name="reference" type="31" value="sclz"></param>
-				<param_ext name="reference" type="31" value="sclz"></param_ext>
+				<param name="reference" type="31" value="data_sclz"></param>
+				<param_ext name="reference" type="31" value="data_sclz"></param_ext>
 				<portdef name="source" type="2048" structure="1" group="1" instance="0" port="0"></portdef>
 				<portdef name="inname" type="8192" structure="1" group="3" instance="0" port="0"></portdef>
 				<datablob category="ui_infos">
@@ -795,8 +796,8 @@
 				</datablob>
 			</node>
 			<node type="GetDataNode" index="23">
-				<param name="reference" type="31" value="roty"></param>
-				<param_ext name="reference" type="31" value="roty"></param_ext>
+				<param name="reference" type="31" value="data_roty"></param>
+				<param_ext name="reference" type="31" value="data_roty"></param_ext>
 				<portdef name="source" type="2048" structure="1" group="1" instance="0" port="0"></portdef>
 				<portdef name="inname" type="8192" structure="1" group="3" instance="0" port="0"></portdef>
 				<datablob category="ui_infos">
@@ -806,8 +807,8 @@
 				</datablob>
 			</node>
 			<node type="GetDataNode" index="24">
-				<param name="reference" type="31" value="rotz"></param>
-				<param_ext name="reference" type="31" value="rotz"></param_ext>
+				<param name="reference" type="31" value="data_rotz"></param>
+				<param_ext name="reference" type="31" value="data_rotz"></param_ext>
 				<portdef name="source" type="2048" structure="1" group="1" instance="0" port="0"></portdef>
 				<portdef name="inname" type="8192" structure="1" group="3" instance="0" port="0"></portdef>
 				<datablob category="ui_infos">
@@ -992,66 +993,66 @@
 			<port index="22" portname="vector" username="Scale" basename="Scale" portlabel="Scale" exposetype="single"> </port>
 		</exposed_ports>
 		<connections>
-			<cnx from_node="24" from_port="value" to_node="2" to_port="Value"> </cnx>
-			<cnx from_node="2" from_port="Result" to_node="21" to_port="Value1"> </cnx>
-			<cnx from_node="0" from_port="Result" to_node="30" to_port="Value1"> </cnx>
-			<cnx from_node="1" from_port="Result" to_node="28" to_port="Value1"> </cnx>
-			<cnx from_node="25" from_port="Result" to_node="19" to_port="Value1"> </cnx>
-			<cnx from_node="26" from_port="Result" to_node="20" to_port="Value1"> </cnx>
-			<cnx from_node="27" from_port="Result" to_node="15" to_port="Value1"> </cnx>
-			<cnx from_node="20" from_port="Value" to_node="5" to_port="x"> </cnx>
-			<cnx from_node="28" from_port="Value" to_node="22" to_port="x"> </cnx>
-			<cnx from_node="29" from_port="Value" to_node="3" to_port="y"> </cnx>
-			<cnx from_node="30" from_port="Value" to_node="22" to_port="z"> </cnx>
 			<cnx from_node="16" from_port="Value" to_node="3" to_port="z"> </cnx>
-			<cnx from_node="17" from_port="Value" to_node="3" to_port="x"> </cnx>
-			<cnx from_node="19" from_port="Value" to_node="22" to_port="y"> </cnx>
-			<cnx from_node="21" from_port="Value" to_node="5" to_port="z"> </cnx>
 			<cnx from_node="15" from_port="Value" to_node="5" to_port="y"> </cnx>
-			<cnx from_node="31" from_port="Result" to_node="17" to_port="Value1"> </cnx>
-			<cnx from_node="32" from_port="Result" to_node="18" to_port="Value1"> </cnx>
-			<cnx from_node="33" from_port="Result" to_node="29" to_port="Value1"> </cnx>
-			<cnx from_node="34" from_port="Result" to_node="16" to_port="Value1"> </cnx>
-			<cnx from_node="5" from_port="vector" to_node="4" to_port="rotationxyz"> </cnx>
-			<cnx from_node="35" from_port="result" to_node="2" to_port="SubStringStart"> </cnx>
-			<cnx from_node="35" from_port="result" to_node="0" to_port="SubStringStart"> </cnx>
-			<cnx from_node="35" from_port="result" to_node="1" to_port="SubStringStart"> </cnx>
-			<cnx from_node="35" from_port="result" to_node="25" to_port="SubStringStart"> </cnx>
-			<cnx from_node="35" from_port="result" to_node="26" to_port="SubStringStart"> </cnx>
-			<cnx from_node="35" from_port="result" to_node="27" to_port="SubStringStart"> </cnx>
-			<cnx from_node="35" from_port="result" to_node="33" to_port="SubStringStart"> </cnx>
-			<cnx from_node="35" from_port="result" to_node="34" to_port="SubStringStart"> </cnx>
-			<cnx from_node="35" from_port="result" to_node="31" to_port="SubStringStart"> </cnx>
-			<cnx from_node="35" from_port="result" to_node="32" to_port="SubStringStart"> </cnx>
-			<cnx from_node="6" from_port="value" to_node="31" to_port="Value"> </cnx>
-			<cnx from_node="7" from_port="value" to_node="32" to_port="Value"> </cnx>
-			<cnx from_node="8" from_port="outname" to_node="24" to_port="inname"> </cnx>
-			<cnx from_node="8" from_port="outname" to_node="14" to_port="inname"> </cnx>
-			<cnx from_node="8" from_port="outname" to_node="12" to_port="inname"> </cnx>
-			<cnx from_node="8" from_port="outname" to_node="13" to_port="inname"> </cnx>
-			<cnx from_node="8" from_port="outname" to_node="11" to_port="inname"> </cnx>
-			<cnx from_node="8" from_port="outname" to_node="23" to_port="inname"> </cnx>
-			<cnx from_node="8" from_port="outname" to_node="9" to_port="inname"> </cnx>
-			<cnx from_node="8" from_port="outname" to_node="10" to_port="inname"> </cnx>
-			<cnx from_node="8" from_port="outname" to_node="6" to_port="inname"> </cnx>
-			<cnx from_node="8" from_port="outname" to_node="7" to_port="inname"> </cnx>
-			<cnx from_node="9" from_port="value" to_node="33" to_port="Value"> </cnx>
-			<cnx from_node="10" from_port="value" to_node="34" to_port="Value"> </cnx>
 			<cnx from_node="11" from_port="value" to_node="26" to_port="Value"> </cnx>
 			<cnx from_node="12" from_port="value" to_node="1" to_port="Value"> </cnx>
 			<cnx from_node="13" from_port="value" to_node="25" to_port="Value"> </cnx>
 			<cnx from_node="14" from_port="value" to_node="0" to_port="Value"> </cnx>
 			<cnx from_node="23" from_port="value" to_node="27" to_port="Value"> </cnx>
-			<cnx from_node="36" from_port="result" to_node="2" to_port="CharacterCount"> </cnx>
-			<cnx from_node="36" from_port="result" to_node="0" to_port="CharacterCount"> </cnx>
-			<cnx from_node="36" from_port="result" to_node="1" to_port="CharacterCount"> </cnx>
+			<cnx from_node="24" from_port="value" to_node="2" to_port="Value"> </cnx>
+			<cnx from_node="25" from_port="Result" to_node="19" to_port="Value1"> </cnx>
+			<cnx from_node="26" from_port="Result" to_node="20" to_port="Value1"> </cnx>
+			<cnx from_node="27" from_port="Result" to_node="15" to_port="Value1"> </cnx>
+			<cnx from_node="31" from_port="Result" to_node="17" to_port="Value1"> </cnx>
+			<cnx from_node="17" from_port="Value" to_node="3" to_port="x"> </cnx>
+			<cnx from_node="0" from_port="Result" to_node="30" to_port="Value1"> </cnx>
+			<cnx from_node="1" from_port="Result" to_node="28" to_port="Value1"> </cnx>
+			<cnx from_node="2" from_port="Result" to_node="21" to_port="Value1"> </cnx>
+			<cnx from_node="6" from_port="value" to_node="31" to_port="Value"> </cnx>
+			<cnx from_node="7" from_port="value" to_node="32" to_port="Value"> </cnx>
+			<cnx from_node="8" from_port="outname" to_node="10" to_port="inname"> </cnx>
+			<cnx from_node="8" from_port="outname" to_node="23" to_port="inname"> </cnx>
+			<cnx from_node="8" from_port="outname" to_node="11" to_port="inname"> </cnx>
+			<cnx from_node="8" from_port="outname" to_node="12" to_port="inname"> </cnx>
+			<cnx from_node="8" from_port="outname" to_node="13" to_port="inname"> </cnx>
+			<cnx from_node="8" from_port="outname" to_node="14" to_port="inname"> </cnx>
+			<cnx from_node="8" from_port="outname" to_node="24" to_port="inname"> </cnx>
+			<cnx from_node="8" from_port="outname" to_node="6" to_port="inname"> </cnx>
+			<cnx from_node="8" from_port="outname" to_node="7" to_port="inname"> </cnx>
+			<cnx from_node="8" from_port="outname" to_node="9" to_port="inname"> </cnx>
+			<cnx from_node="9" from_port="value" to_node="33" to_port="Value"> </cnx>
+			<cnx from_node="10" from_port="value" to_node="34" to_port="Value"> </cnx>
+			<cnx from_node="19" from_port="Value" to_node="22" to_port="y"> </cnx>
+			<cnx from_node="20" from_port="Value" to_node="5" to_port="x"> </cnx>
+			<cnx from_node="21" from_port="Value" to_node="5" to_port="z"> </cnx>
+			<cnx from_node="28" from_port="Value" to_node="22" to_port="x"> </cnx>
+			<cnx from_node="29" from_port="Value" to_node="3" to_port="y"> </cnx>
+			<cnx from_node="30" from_port="Value" to_node="22" to_port="z"> </cnx>
+			<cnx from_node="5" from_port="vector" to_node="4" to_port="rotationxyz"> </cnx>
+			<cnx from_node="35" from_port="result" to_node="34" to_port="SubStringStart"> </cnx>
+			<cnx from_node="35" from_port="result" to_node="27" to_port="SubStringStart"> </cnx>
+			<cnx from_node="35" from_port="result" to_node="25" to_port="SubStringStart"> </cnx>
+			<cnx from_node="35" from_port="result" to_node="26" to_port="SubStringStart"> </cnx>
+			<cnx from_node="35" from_port="result" to_node="31" to_port="SubStringStart"> </cnx>
+			<cnx from_node="35" from_port="result" to_node="0" to_port="SubStringStart"> </cnx>
+			<cnx from_node="35" from_port="result" to_node="1" to_port="SubStringStart"> </cnx>
+			<cnx from_node="35" from_port="result" to_node="2" to_port="SubStringStart"> </cnx>
+			<cnx from_node="35" from_port="result" to_node="32" to_port="SubStringStart"> </cnx>
+			<cnx from_node="35" from_port="result" to_node="33" to_port="SubStringStart"> </cnx>
+			<cnx from_node="36" from_port="result" to_node="34" to_port="CharacterCount"> </cnx>
+			<cnx from_node="36" from_port="result" to_node="27" to_port="CharacterCount"> </cnx>
 			<cnx from_node="36" from_port="result" to_node="25" to_port="CharacterCount"> </cnx>
 			<cnx from_node="36" from_port="result" to_node="26" to_port="CharacterCount"> </cnx>
-			<cnx from_node="36" from_port="result" to_node="27" to_port="CharacterCount"> </cnx>
-			<cnx from_node="36" from_port="result" to_node="33" to_port="CharacterCount"> </cnx>
-			<cnx from_node="36" from_port="result" to_node="34" to_port="CharacterCount"> </cnx>
 			<cnx from_node="36" from_port="result" to_node="31" to_port="CharacterCount"> </cnx>
+			<cnx from_node="36" from_port="result" to_node="0" to_port="CharacterCount"> </cnx>
+			<cnx from_node="36" from_port="result" to_node="1" to_port="CharacterCount"> </cnx>
+			<cnx from_node="36" from_port="result" to_node="2" to_port="CharacterCount"> </cnx>
 			<cnx from_node="36" from_port="result" to_node="32" to_port="CharacterCount"> </cnx>
+			<cnx from_node="36" from_port="result" to_node="33" to_port="CharacterCount"> </cnx>
+			<cnx from_node="32" from_port="Result" to_node="18" to_port="Value1"> </cnx>
+			<cnx from_node="33" from_port="Result" to_node="29" to_port="Value1"> </cnx>
+			<cnx from_node="34" from_port="Result" to_node="16" to_port="Value1"> </cnx>
 		</connections>
 		<layout>
 			<item type="input" name="In_Name"> </item>

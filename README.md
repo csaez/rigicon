@@ -5,7 +5,7 @@ A simple icon library for Softimage, a convenient tool to create, edit and manag
 Dependencies
 ------------
 - [PyQt For Softimage](https://github.com/caron/PyQtForSoftimage)
-- [wishlib >= 0.1.3](http://github.com/wishdev-project/wishlib)
+- [wishlib](http://github.com/wishdev-project/wishlib)
 
 Installation
 ------------

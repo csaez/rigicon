@@ -9,8 +9,8 @@ setup(
     author="Cesar Saez",
     author_email="cesarte@gmail.com",
     description="A simple icon library for Softimage",
-    url="www.github.com/csaez/rigicon",
+    url="https://www.github.com/csaez/rigicon",
     license="GNU General Public License (GPLv3)",
-    install_requires=["wishlib >= 0.1.3"],
+    install_requires=["wishlib >= 0.2.0"],
     scripts=["RigIconPlugin.py"]
 )

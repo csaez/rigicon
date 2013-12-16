@@ -37,6 +37,10 @@ class Icon(SIWrapper):
                 setattr(icon, k, v)
         return icon
 
+    @classmethod
+    def new(cls, *args, **kwds):
+        return cls.create(*args, **kwds)
+
     def __new__(cls, obj):
         if obj.Type == "crvlist":
             return SIWrapper.__new__(cls, obj)
@@ -78,9 +82,14 @@ class Icon(SIWrapper):
             print "ERROR:", value, "doesnt found on library."
             return
         self._shape = value
-        si.FreezeObj(self.obj)
+        # check construction history and freeze
+        if len([__ for __ in self.obj.ActivePrimitive.ConstructionHistory]):
+            si.FreezeObj(self.obj)
         self.obj.ActivePrimitive.Geometry.Set(*item[0].data)
         self.apply_transform  # ensure apply_transform exists
+        # restore old connection line
+        if hasattr(self, "_connect"):
+            self.connect = self._connect
 
     @property
     def colorr(self):
