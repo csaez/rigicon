@@ -1,1 +1,48 @@
-v0.1.0, 06-12-2013 -- Initial release.
+2013-06-13 03:47:03     2575 +2575    -0 dad580d cesarte@gmail.com 	First commit
+2013-06-16 04:24:49     2585   +17    -7 9b89133 cesarte@gmail.com 	Inherit QMainWindow from wishlib.qt.qtgui
+2013-06-16 04:25:26     2584    +2    -3 35370d9 cesarte@gmail.com 	check rigicon from rigicon.icon.is_icon() function
+2013-06-16 04:25:45     2590   +20   -14 358ebf0 cesarte@gmail.com 	new is_icon()
+2013-06-16 22:57:16     2620   +30    -0 ac24be2 cesarte@gmail.com 	first commit
+2013-06-16 23:03:28     2620    +1    -1 8bcba55 cesarte@gmail.com 	Docs updated!
+2013-06-16 23:21:04     2634   +24   -10 a6c2022 cesarte@gmail.com 	docs update
+2013-06-17 00:29:48     2719   +90    -5 d316d58 cesarte@gmail.com 	docs
+2013-06-17 00:34:57     2701   +19   -37 b70956d cesarte@gmail.com 	wip
+2013-06-17 05:01:36     2703   +90   -88 0d0d900 cesarte@gmail.com 	library.get_item() added
+2013-06-17 05:07:05     2705    +2    -0 32dbc57 cesarte@gmail.com 	installation updated
+2013-06-17 05:15:00     2681   +15   -39 6f61469 cesarte@gmail.com 	docs
+2013-06-17 05:19:25     2681    +1    -1 e6673e8 cesarte@gmail.com 	install docs
+2013-06-18 04:01:24     2679    +3    -5 92ef7de cesarte@gmail.com 	wishlib.si.show_qt()
+2013-06-18 04:01:52     2585   +62  -156 0cde559 cesarte@gmail.com 	class name changed
+2013-06-18 04:02:05     2467   +20  -138 75b8f06 cesarte@gmail.com 	ui items renamed
+2013-06-18 04:02:21     2485   +48   -30 d1314bc cesarte@gmail.com 	clean out
+2013-06-18 04:56:53     2490   +23   -18 9844f74 cesarte@gmail.com 	docs updated
+2013-06-18 05:58:47     2493    +7    -4 a68f1a7 cesarte@gmail.com 	Icon.create() updated
+2013-06-18 06:05:33     2492    +5    -6 95f336f cesarte@gmail.com 	readme updated
+2013-06-24 21:44:44     3724 +1282   -50 bbe8bdc cesarte@gmail.com 	moevd to 'softimage_addon'
+2013-06-24 22:00:31     3745   +27    -6 94271e3 cesarte@gmail.com 	docs updated
+2013-06-24 22:03:17     3746    +6    -5 ad99325 cesarte@gmail.com 	docs updated
+2013-06-24 22:19:35     3746    +1    -1 f2a7933 cesarte@gmail.com 	link to wiki
+2013-06-25 02:58:29     3802  +114   -58 b8fa4b3 cesarte@gmail.com 	apply_transform and connect implemented
+2013-06-25 02:59:11     3812   +14    -4 1923776 cesarte@gmail.com 	new RigIconReloader, just for dev purposes...
+2013-06-25 06:17:23     3814    +3    -1 befc1ed cesarte@gmail.com 	library.get_items() returns a list
+2013-06-25 06:17:57     3620   +57  -251 7d6567a cesarte@gmail.com 	shape and color implemented
+2013-06-25 06:18:17     3620    +4    -4 e4cffaa cesarte@gmail.com 	convert softimage names to string
+2013-06-25 07:15:50     3644   +38   -14 a5e5e7e cesarte@gmail.com 	connection line implemented
+2013-06-25 07:43:00     3652 +1307 -1299 1d4e0bd cesarte@gmail.com 	include compounds as package_data
+2013-06-25 08:01:42     3652    +1    -1 ed1c6c0 cesarte@gmail.com 	cleanup
+2013-06-25 08:01:48     3651    +1    -2 1eb4961 cesarte@gmail.com 	cleanup
+2013-06-25 08:06:59     6082 +2644  -213 8b90a0f cesarte@gmail.com 	cleanup
+2013-06-25 08:09:37     6245  +163    -0 2193837 cesarte@gmail.com 	gitignore added
+2013-06-25 08:10:46     3601    +0 -2644 76604cb cesarte@gmail.com 	cleanup
+2013-06-25 08:11:55     3601    +0    -0 22b39a9 cesarte@gmail.com 	clenup
+2013-06-25 19:45:58     3601    +1    -1 e9e15e7 cesarte@gmail.com 	library.md updated
+2013-06-25 19:48:08     3601    +1    -1 4b28bb2 cesarte@gmail.com 	typo
+2013-06-25 21:03:52     3619   +39   -21 5dd8caf cesarte@gmail.com 	multiselection implemented
+2013-06-25 22:14:46     3619    +1    -1 f2431b5 cesarte@gmail.com 	xsiaddon link
+2013-06-25 22:15:00     3621   +11    -9 8f0db88 cesarte@gmail.com 	select on create
+2013-06-25 22:15:07     3622    +1    -0 8e3d6dd cesarte@gmail.com 	custom shape
+2013-06-26 20:10:57     3622    +1    -1 e6f50c9 cesarte@gmail.com 	README updated
+2013-06-27 08:04:07     3623    +1    -0 c905126 cesarte@gmail.com 	README updated
+2013-06-27 11:03:43     3626    +4    -1 0ff119f cesarte@gmail.com 	BUGFIX: if shape is not anymore on library then set it as "Custom"
+2013-12-16 16:12:25     3637   +85   -74 63b3123 cesarte@gmail.com 	UPDATE: wishlib 0.2.0 compatible (new namespace)
+2014-01-26 20:21:52     3679   +90   -48 6713088 cesarte@gmail.com 	ConnectionLine color synced with main color
