@@ -1,6 +1,6 @@
 import os
 from collections import OrderedDict
-from wishlib.si import disp, si, siget, SIWrapper, no_inspect
+from wishlib.si import disp, si, siget, SIWrapper
 from . import library
 
 DEFAULT_DATA = {"size": 1.0, "shape": "Null", "connect": None,
@@ -92,12 +92,22 @@ class Icon(SIWrapper):
             self.connect = self._connect
 
     @property
+    def color(self):
+        return [int(x * 255) for x in (self.colorr, self.colorg, self.colorb)]
+
+    @color.setter
+    def color(self, rgb_list):
+        for i, c in enumerate("rgb"):
+            setattr(self, "color" + c, rgb_list[i] / 255.0)
+
+    @property
     def colorr(self):
         return self._colorr
 
     @colorr.setter
     def colorr(self, value):
         self.obj.Properties("Display").Parameters("wirecolorr").Value = value
+        self.attr_display.Parameters("colorr").Value = value
         self._colorr = value
 
     @property
@@ -107,6 +117,7 @@ class Icon(SIWrapper):
     @colorg.setter
     def colorg(self, value):
         self.obj.Properties("Display").Parameters("wirecolorg").Value = value
+        self.attr_display.Parameters("colorg").Value = value
         self._colorg = value
 
     @property
@@ -116,6 +127,7 @@ class Icon(SIWrapper):
     @colorb.setter
     def colorb(self, value):
         self.obj.Properties("Display").Parameters("wirecolorb").Value = value
+        self.attr_display.Parameters("colorb").Value = value
         self._colorb = value
 
     @property
@@ -140,6 +152,12 @@ class Icon(SIWrapper):
             param.Value = str(self._connect.FullName)
         except:
             param.Value = ""
+        # attribute display
+        self.attr_display.Parameters("enable").Value = obj is not None
+        if self.attr_display.Parameters("enable").Value:
+            for color in "rgb":
+                p = "color" + color
+                self.attr_display.Parameters(p).Value = getattr(self, p)
 
     @property
     def connect_op(self):
@@ -148,9 +166,21 @@ class Icon(SIWrapper):
                 return icetree
         return self._addICETree(CONNECT_COMPOUND)
 
-    @no_inspect
     def _addICETree(self, compound_name):
         compound_file = os.path.join(os.path.dirname(__file__), "data",
                                      "compounds", compound_name + ".xsicompound")
         compound_file = os.path.normpath(compound_file)
-        return si.ApplyICEOp(compound_file, self.obj)
+        return si.SIApplyICEOp(compound_file, self.obj)
+
+    @property
+    def attr_display(self):
+        p = [x for x in self.obj.Properties
+             if "rigicon" in x.Name.lower() and x.Type == "attributedisplay"]
+        if not len(p):
+            p = self.obj.AddProperty("AttributeDisplay")
+            p.Name = "rigicon__AttributeDisplay"
+            p.Parameters("attrname").Value = "RigIcon__connect"
+            p.Parameters("displaymodecombo").Value = "Lines"
+        else:
+            p = p[0]
+        return p

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsi_file type="CompoundNode" name="RigIcon__ConnectionLine" category="" tasks="Deformation/RigIcon" author="csaez" url="https://github.com/csaez/rigicon" formatversion="1.4" compoundversion="1.0" versiontag="" constructionmode="Animation" backgroundcolor="10922155">
-	<description><![CDATA[]]></description>
+<xsi_file type="CompoundNode" name="RigIcon__ConnectionLine" tasks="Deformation/RigIcon" author="csaez" url="https://github.com/csaez/rigicon" formatversion="1.4" compoundversion="1.0" constructionmode="Animation" backgroundcolor="10922155">
 	<definition>
 		<nodes>
 			<node type="BuildArrayNode" index="0">
@@ -9,8 +8,8 @@
 				<param name="value1.value1_z" type="4" value="0.000000"></param>
 				<portdef name="value1" type="16" structure="1" group="0" instance="0" port="0"></portdef>
 				<datablob category="ui_infos">
-					<prop name="posx">-495</prop>
-					<prop name="posy">143</prop>
+					<prop name="posx">-492</prop>
+					<prop name="posy">177</prop>
 					<prop name="state">Normal</prop>
 				</datablob>
 			</node>
@@ -37,8 +36,8 @@
 				<portdef name="vector" type="16" structure="2" group="0" instance="0" port="0"></portdef>
 				<portdef name="matrix" type="256" structure="1" group="0" instance="0" port="1"></portdef>
 				<datablob category="ui_infos">
-					<prop name="posx">-345</prop>
-					<prop name="posy">171</prop>
+					<prop name="posx">-340</prop>
+					<prop name="posy">200</prop>
 					<prop name="state">Normal</prop>
 				</datablob>
 			</node>
@@ -48,8 +47,8 @@
 				<portdef name="source" type="2048" structure="1" group="1" instance="0" port="0"></portdef>
 				<portdef name="inname" type="8192" structure="1" group="3" instance="0" port="0"></portdef>
 				<datablob category="ui_infos">
-					<prop name="posx">-690</prop>
-					<prop name="posy">134</prop>
+					<prop name="posx">-687</prop>
+					<prop name="posy">168</prop>
 					<prop name="state">Normal</prop>
 				</datablob>
 			</node>
@@ -59,8 +58,8 @@
 				<portdef name="source" type="2048" structure="1" group="1" instance="0" port="0"></portdef>
 				<portdef name="inname" type="8192" structure="1" group="3" instance="0" port="0"></portdef>
 				<datablob category="ui_infos">
-					<prop name="posx">-825</prop>
-					<prop name="posy">127</prop>
+					<prop name="posx">-822</prop>
+					<prop name="posy">161</prop>
 					<prop name="state">Normal</prop>
 				</datablob>
 			</node>
@@ -83,8 +82,8 @@
 				<param name="value.value_33" type="4" value="1.000000"></param>
 				<portdef name="value" type="256" structure="1" group="0" instance="0" port="0"></portdef>
 				<datablob category="ui_infos">
-					<prop name="posx">-468</prop>
-					<prop name="posy">250</prop>
+					<prop name="posx">-465</prop>
+					<prop name="posy">284</prop>
 					<prop name="state">Normal</prop>
 				</datablob>
 			</node>
@@ -97,27 +96,28 @@
 				<portdef name="In_Name" type="8192" structure="1" group="-1" instance="-1" port="-1"></portdef>
 				<portdef name="Value" type="16" structure="2" group="2" instance="0" port="0" groupname="Value"></portdef>
 				<datablob category="ui_infos">
-					<prop name="posx">64</prop>
-					<prop name="posy">142</prop>
+					<prop name="posx">170</prop>
+					<prop name="posy">151</prop>
 					<prop name="state">Normal</prop>
 				</datablob>
-				<datablob category="vis_1">
-					<prop name="colorb">0.250000</prop>
-					<prop name="colorg">0.250000</prop>
-					<prop name="colorr">0.250000</prop>
-					<prop name="displaymode">11</prop>
-					<prop name="enable">1</prop>
-					<prop name="port">Value</prop>
-				</datablob>
 			</node>
-			<node type="IfNode" index="6">
-				<param name="condition" type="11" value="false"></param>
-				<portdef name="condition" type="1" structure="1" group="0" instance="0" port="0"></portdef>
-				<portdef name="iftrue" type="4096" structure="1" group="0" instance="0" port="1"></portdef>
-				<portdef name="iffalse" type="4096" structure="1" group="0" instance="0" port="2"></portdef>
+			<node type="LogValuesNode" index="6">
+				<param name="debugprinttag" type="31" value=""></param>
+				<param name="in.in_x" type="4" value="0.000000"></param>
+				<param name="in.in_y" type="4" value="0.000000"></param>
+				<param name="in.in_z" type="4" value="0.000000"></param>
+				<param name="log" type="11" value="false"></param>
+				<param name="allelements" type="11" value="true"></param>
+				<param name="firstelement" type="3" value="0"></param>
+				<param name="lastelement" type="3" value="0"></param>
+				<portdef name="in" type="16" structure="2" group="0" instance="0" port="0"></portdef>
+				<portdef name="log" type="1" structure="1" group="0" instance="0" port="1"></portdef>
+				<portdef name="allelements" type="1" structure="1" group="0" instance="0" port="2"></portdef>
+				<portdef name="firstelement" type="2" structure="1" group="0" instance="0" port="3"></portdef>
+				<portdef name="lastelement" type="2" structure="1" group="0" instance="0" port="4"></portdef>
 				<datablob category="ui_infos">
-					<prop name="posx">257</prop>
-					<prop name="posy">93</prop>
+					<prop name="posx">32</prop>
+					<prop name="posy">176</prop>
 					<prop name="state">Normal</prop>
 				</datablob>
 			</node>
@@ -127,40 +127,51 @@
 				<portdef name="source" type="2048" structure="1" group="1" instance="0" port="0"></portdef>
 				<portdef name="inname" type="8192" structure="1" group="3" instance="0" port="0"></portdef>
 				<datablob category="ui_infos">
-					<prop name="posx">-683</prop>
-					<prop name="posy">263</prop>
+					<prop name="posx">-680</prop>
+					<prop name="posy">297</prop>
 					<prop name="state">Normal</prop>
 				</datablob>
 			</node>
-			<node type="PassThroughNode" index="8">
-				<param name="in.in_x" type="4" value="0.000000"></param>
-				<param name="in.in_y" type="4" value="0.000000"></param>
-				<param name="in.in_z" type="4" value="0.000000"></param>
-				<portdef name="in" type="16" structure="2" group="0" instance="0" port="0"></portdef>
+			<node type="BuildArrayNode" index="8">
+				<param name="value1.value1_x" type="4" value="0.000000"></param>
+				<param name="value1.value1_y" type="4" value="0.000000"></param>
+				<param name="value1.value1_z" type="4" value="0.000000"></param>
+				<param name="value2.value2_x" type="4" value="0.000000"></param>
+				<param name="value2.value2_y" type="4" value="0.000000"></param>
+				<param name="value2.value2_z" type="4" value="0.000000"></param>
+				<portdef name="value1" type="16" structure="1" group="0" instance="0" port="0"></portdef>
+				<portdef name="value2" type="16" structure="2" group="0" instance="1" port="0"></portdef>
 				<datablob category="ui_infos">
-					<prop name="posx">-112</prop>
-					<prop name="posy">175</prop>
+					<prop name="posx">-97</prop>
+					<prop name="posy">182</prop>
+					<prop name="state">Normal</prop>
+				</datablob>
+			</node>
+			<node type="PassThroughNode" index="9">
+				<portdef name="in" type="4096" structure="1" group="0" instance="0" port="0"></portdef>
+				<datablob category="ui_infos">
+					<prop name="posx">343</prop>
+					<prop name="posy">142</prop>
 					<prop name="state">Normal</prop>
 				</datablob>
 			</node>
 		</nodes>
 		<exposed_ports>
 			<port index="3" portname="reference" username="Reference" basename="Reference" portlabel="Reference" exposetype="single"> </port>
-			<port index="6" portname="result" username="Execute" basename="Execute" portlabel="Execute" exposetype="single"> </port>
-			<port index="6" portname="condition" username="Mute" basename="Mute" portlabel="Mute" exposetype="single"> </port>
+			<port index="9" portname="out" username="Execute" basename="Execute" portlabel="Execute" exposetype="single"> </port>
 		</exposed_ports>
 		<connections>
-			<cnx from_node="5" from_port="Execute" to_node="6" to_port="iffalse"> </cnx>
+			<cnx from_node="6" from_port="out" to_node="5" to_port="Value"> </cnx>
+			<cnx from_node="8" from_port="array" to_node="6" to_port="in"> </cnx>
 			<cnx from_node="0" from_port="array" to_node="1" to_port="vector"> </cnx>
-			<cnx from_node="1" from_port="result" to_node="8" to_port="in"> </cnx>
+			<cnx from_node="1" from_port="result" to_node="8" to_port="value2"> </cnx>
+			<cnx from_node="4" from_port="result" to_node="1" to_port="matrix"> </cnx>
 			<cnx from_node="2" from_port="value" to_node="0" to_port="value1"> </cnx>
 			<cnx from_node="3" from_port="outname" to_node="2" to_port="inname"> </cnx>
-			<cnx from_node="4" from_port="result" to_node="1" to_port="matrix"> </cnx>
 			<cnx from_node="7" from_port="value" to_node="4" to_port="value"> </cnx>
-			<cnx from_node="8" from_port="out" to_node="5" to_port="Value"> </cnx>
+			<cnx from_node="5" from_port="Execute" to_node="9" to_port="in"> </cnx>
 		</connections>
 		<layout>
-			<item type="input" name="Mute"> </item>
 			<item type="input" name="Reference"> </item>
 			<item type="output" name="Execute"> </item>
 		</layout>
