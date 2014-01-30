@@ -1,17 +1,30 @@
-import sys
+# This file is part of rigicon
+# Copyright (C) 2014  Cesar Saez
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation version 3.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 from wishlib.si import si, siget, log, C, show_qt
 
 
 def XSILoadPlugin(in_reg):
-    in_reg.Name = "RigIconPlugin"
+    in_reg.Name = "RigIcon Plugin"
     in_reg.Author = "csaez"
     in_reg.Major = 1.0
     in_reg.Minor = 0.0
     in_reg.UserData = ""
-    in_reg.RegisterCommand("RigIconLibrary", "RigIconLibrary")
-    in_reg.RegisterCommand("RigIconEditor", "RigIconEditor")
+    in_reg.RegisterCommand("RigIcon Library", "RigIconLibrary")
+    in_reg.RegisterCommand("RigIcon Editor", "RigIconEditor")
     in_reg.RegisterCommand("RigIcon", "RigIcon")
-    # in_reg.RegisterCommand("RigIconReloader", "RigIconReloader")
     in_reg.RegisterFilter("RigIcon", C.siFilter3DObject)
     return True
 
@@ -42,14 +55,6 @@ def RigIcon_Execute():
     if siget("preferences.modeling.selectgeneratedobj"):
         si.SelectObj(icon.obj)
     return True
-
-
-# def RigIconReloader_Execute():
-#     log("RigIconReloader_Execute called", C.siVerbose)
-#     for k in sys.modules.keys():
-#         if k.startswith("rigicon"):
-#             del sys.modules[k]
-#     return True
 
 
 def RigIcon_Match(in_ctxt):
