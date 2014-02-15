@@ -26,5 +26,5 @@ setup(
     description="A simple icon library for Softimage",
     url="http://www.github.com/csaez/rigicon",
     license="GNU General Public License (GPLv3)",
-    install_requires=["wishlib >= 0.2.0"]
+    install_requires=["wishlib >= 0.3.0"]
 )

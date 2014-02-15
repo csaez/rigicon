@@ -4,16 +4,19 @@ A simple icon library for Softimage, a convenient tool to create, edit and manag
 
 Dependencies
 ------------
-- [PyQt For Softimage](https://github.com/caron/PyQtForSoftimage)
+- [PyQtForSoftimage](https://github.com/caron/PyQtForSoftimage)
 - [wishlib](http://github.com/wishdev-project/wishlib)
 
 Installation
 ------------
-You can get a pre-packed xsiaddon from [here](http://goo.gl/XRtKA) or get the package from the Python Package Index.
+You can get a pre-packed xsiaddon from [here](http://goo.gl/XRtKA) (includes `wishlib`).
 
-    pip install rigicon
+or
 
-Once it's installed copy `RigIconPlugin.py` file to a softimage plugin directory.
+Clone the repo, copy/symlink `rigicon_plugin.py` to a Softimage plugin directory and install the libraries typing in a terminal:
+
+    python setup.py install
+
 
 Ussage
 ------

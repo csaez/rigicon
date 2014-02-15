@@ -15,19 +15,18 @@
 
 import os
 
-from PyQt4 import uic, QtCore, QtGui
-from wishlib.qt.QtGui import QMainWindow
+from wishlib.qt import QtGui, QtCore, loadUi, widgets
 from wishlib.si import sisel
 
 from .. import library
 
 
-class RigIconLibrary(QMainWindow):
+class RigIconLibrary(widgets.QMainWindow):
 
     def __init__(self, parent=None):
         super(RigIconLibrary, self).__init__(parent)
         uifile = os.path.join(os.path.dirname(__file__), "ui", "library.ui")
-        self.ui = uic.loadUi(os.path.normpath(uifile), self)
+        self.ui = loadUi(os.path.normpath(uifile), self)
         self.Reload_OnClicked()
 
     def Reload_OnClicked(self):

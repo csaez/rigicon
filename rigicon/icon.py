@@ -17,6 +17,7 @@ import os
 from collections import OrderedDict
 
 from wishlib.si import disp, si, siget, SIWrapper
+from wishlib.si.decorators import no_inspect
 
 from . import library
 
@@ -158,10 +159,13 @@ class Icon(SIWrapper):
 
     @property
     def connect(self):
-        return self._connect
+        if hasattr(self, "_connect"):
+            return self._connect
 
     @connect.setter
     def connect(self, obj):
+        if not obj:
+            return
         self._connect = obj
         param = siget("{0}.{1}.Reference".format(self.connect_op.FullName,
                                                  CONNECT_COMPOUND))
@@ -183,11 +187,13 @@ class Icon(SIWrapper):
                 return icetree
         return self._addICETree(CONNECT_COMPOUND)
 
+    @no_inspect
     def _addICETree(self, compound_name):
         compound_file = os.path.join(os.path.dirname(__file__), "data",
                                      "compounds", compound_name + ".xsicompound")
         compound_file = os.path.normpath(compound_file)
-        return si.SIApplyICEOp(compound_file, self.obj)
+        op = si.ApplyICEOp(compound_file, self.obj)
+        return op
 
     @property
     def attr_display(self):

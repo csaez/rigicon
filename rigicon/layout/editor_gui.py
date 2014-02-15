@@ -15,16 +15,15 @@
 
 import os
 
-from PyQt4 import uic, QtCore, QtGui
-from sisignals import signals, muteSIEvent
 from wishlib.si import si, sisel
-from wishlib.qt.QtGui import QDialog
+from wishlib.qt import QtGui, QtCore, loadUi, widgets
+from sisignals import signals, muteSIEvent
 
 from .. import icon
 from .. import library
 
 
-class RigIconEditor(QDialog):
+class RigIconEditor(widgets.QDialog):
     DEFAULT_VALUES = {"iconname_lineEdit": "",
                       "connect_label": "",
                       "shape_comboBox": 0,
@@ -37,7 +36,7 @@ class RigIconEditor(QDialog):
     def __init__(self, parent=None):
         super(RigIconEditor, self).__init__(parent)
         uifile = os.path.join(os.path.dirname(__file__), "ui", "editor.ui")
-        self.ui = uic.loadUi(os.path.normpath(uifile), self)
+        self.ui = loadUi(os.path.normpath(uifile), self)
         self.library_items = library.get_items()
         self.icons = list()
         self.multi = list()  # hold common multi selection values
@@ -74,7 +73,7 @@ class RigIconEditor(QDialog):
                 function(widget, value)
 
     def library_clicked(self):
-        si.Commands("RigIconLibrary").Execute()
+        si.Commands("RigIcon Library").Execute()
 
     def color_clicked(self):
         # get color from stylesheet
