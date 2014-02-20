@@ -40,6 +40,12 @@ def get_items():
     return items
 
 
+def get_item(name):
+    for x in get_items():
+        if x["Name"] == name:
+            return x
+
+
 def rename_item(item, new_name):
     fp = item.fp
     item.fp = item.fp.replace(item["Name"], new_name)
