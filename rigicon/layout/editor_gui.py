@@ -50,7 +50,7 @@ class RigIconEditor(widgets.QDialog):
         self.ui.shape_comboBox.clear()
         self.ui.shape_comboBox.addItem("Custom")
         for i in self.library_items:
-            self.ui.shape_comboBox.addItem(i.name)
+            self.ui.shape_comboBox.addItem(i.get("Name"))
         # connect signals and load values using selection
         self._connect_signals()
         self.reload_clicked()
@@ -99,7 +99,7 @@ class RigIconEditor(widgets.QDialog):
         if index < 0:
             return
         for rigicon in self.icons:
-            rigicon.shape = self.library_items[index].name
+            rigicon.shape = self.library_items[index].get("Name")
 
     def connection_clicked(self):
         picked = si.PickObject()("PickedElement")
@@ -132,7 +132,7 @@ class RigIconEditor(widgets.QDialog):
                 attr = k.split("_")[0]
                 # get attr value
                 if attr == "shape":
-                    items = [i.name.lower() for i in self.library_items]
+                    items = [i["Name"].lower() for i in self.library_items]
                     try:
                         value = items.index(icon.shape) + 1
                     except:

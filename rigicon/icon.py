@@ -94,7 +94,8 @@ class Icon(SIWrapper):
         value = str(value).lower()
         if hasattr(self, "_shape") and self._shape == value:
             return
-        item = [x for x in library.get_items() if x.name.lower() == value]
+        item = [x for x in library.get_items()
+                if x["Name"].lower() == value]
         if not len(item):
             self._shape = "Custom"
             print "ERROR:", value, "doesnt found on library."
@@ -103,7 +104,11 @@ class Icon(SIWrapper):
         # check construction history and freeze
         if len([__ for __ in self.obj.ActivePrimitive.ConstructionHistory]):
             si.FreezeObj(self.obj)
-        self.obj.ActivePrimitive.Geometry.Set(*item[0].data)
+        item = item[0]
+        self.obj.ActivePrimitive.Geometry.Set(
+            item["Count"], item["ControlPoints"], item["NbControlPoints"],
+            item["Knots"], item["NbKnots"], item["Closed"], item["Degree"],
+            item["Parameterization"])
         self.apply_transform  # ensure apply_transform exists
         # restore old connection line
         if hasattr(self, "_connect"):

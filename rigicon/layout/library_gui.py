@@ -32,7 +32,7 @@ class RigIconLibrary(widgets.QMainWindow):
     def Reload_OnClicked(self):
         self.ui.items_listWidget.clear()
         for library_item in library.get_items():
-            item = QtGui.QListWidgetItem(library_item.name)
+            item = QtGui.QListWidgetItem(library_item.get("Name"))
             item.setFlags(QtCore.Qt.ItemIsSelectable |
                           QtCore.Qt.ItemIsEditable |
                           QtCore.Qt.ItemIsEnabled)
@@ -40,19 +40,17 @@ class RigIconLibrary(widgets.QMainWindow):
 
     def Add_OnClicked(self):
         for curve in sisel:
-            item = library.LibraryItem(curve.Name)
-            item.data = curve.ActivePrimitive.Geometry.Get2()
+            library.add_item(curve.Name, curve.ActivePrimitive.Geometry.Get2())
         self.Reload_OnClicked()
 
     def Remove_OnClicked(self):
         selected = str(self.ui.items_listWidget.currentItem().text())
-        for item in library.get_items():
-            if item.name == selected:
-                item.destroy()
+        library.remove_item(selected)
         self.Reload_OnClicked()
 
     def Rename_OnChanged(self, item):
         index = self.ui.items_listWidget.currentRow()
         item = [i for i in library.get_items()][index]
-        item.name = str(self.ui.items_listWidget.currentItem().text())
+        new_name = str(self.ui.items_listWidget.currentItem().text())
+        library.rename_item(item, new_name)
         self.Reload_OnClicked()
