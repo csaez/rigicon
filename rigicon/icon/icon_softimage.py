@@ -19,7 +19,7 @@ from collections import OrderedDict
 from wishlib.si import disp, si, siget, SIWrapper
 from wishlib.si.decorators import no_inspect
 
-from . import library
+from .. import library
 
 DEFAULT_DATA = {"size": 1.0, "shape": "Null", "connect": None,
                 "colorr": 1.0, "colorg": 0.882, "colorb": 0.0,
@@ -194,7 +194,7 @@ class Icon(SIWrapper):
 
     @no_inspect
     def _addICETree(self, compound_name):
-        compound_file = os.path.join(os.path.dirname(__file__), "data",
+        compound_file = os.path.join(os.path.dirname(__file__), "..", "data",
                                      "compounds", compound_name + ".xsicompound")
         compound_file = os.path.normpath(compound_file)
         op = si.ApplyICEOp(compound_file, self.obj)

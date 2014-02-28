@@ -13,11 +13,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from rigicon.icon_interface import is_icon, IconInterface
 from wishlib import inside_softimage, inside_maya
+from .icon_interface import IconInterface, is_icon
 
 if inside_softimage():
-    from rigicon.icon_softimage import Icon, is_icon
+    from .icon_softimage import Icon, is_icon
 elif inside_maya():
     class Icon(IconInterface):
         pass

@@ -41,10 +41,10 @@ class rigIconEditor(OpenMayaMPx.MPxCommand):
         show_qt(RigIconEditor)
 
 
-class rigIcon(OpenMayaMPx.MPxCommand):
+class rigIconCreator(OpenMayaMPx.MPxCommand):
 
     def __init__(self):
-        super(rigIcon, self).__init__()
+        super(rigIconCreator, self).__init__()
 
     # Invoked when the command is run.
     def doIt(self, argList):
@@ -53,7 +53,7 @@ class rigIcon(OpenMayaMPx.MPxCommand):
 
 plugin_cmds = {"rigIconLibrary": rigIconLibrary,
                "rigIconEditor": rigIconEditor,
-               "rigIcon": rigIcon}
+               "rigIcon": rigIconCreator}
 
 
 # Initialize the script plug-in
@@ -62,7 +62,7 @@ def initializePlugin(mobject):
     for cmd_name, cmd_class in plugin_cmds.iteritems():
         try:
             mplugin.registerCommand(
-                cmd_name, lambda: OpenMayaMPx.asMPxPtr(cmd_class()))
+                cmd_name, lambda x=cmd_class(): OpenMayaMPx.asMPxPtr(x))
         except:
             sys.stderr.write("Failed to register command: %s\n" % cmd_name)
             raise
