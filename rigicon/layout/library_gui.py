@@ -1,5 +1,5 @@
 # This file is part of rigicon
-# Copyright (C) 2014  Cesar Saez
+# Copyright (C) 2014 Cesar Saez
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,15 +14,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import sys
 from wishlib import inside_maya, inside_softimage
-from wishlib.qt import QtGui, QtCore, loadUi
-from .. import library
+from wishlib.qt import QtGui, QtCore, loadUi, set_style
+from rigicon import library
 
 
-class RigIconLibrary(QtGui.QMainWindow):
+class RigIconLibraryInferface(QtGui.QMainWindow):
 
     def __init__(self, parent=None):
-        super(RigIconLibrary, self).__init__(parent)
+        super(RigIconLibraryInferface, self).__init__(parent)
         uifile = os.path.join(os.path.dirname(__file__), "ui", "library.ui")
         self.ui = loadUi(os.path.normpath(uifile), self)
         # signals
@@ -43,14 +44,7 @@ class RigIconLibrary(QtGui.QMainWindow):
             self.ui.items_listWidget.addItem(item)
 
     def Add_OnClicked(self):
-        if inside_softimage():
-            from wishlib.si import sisel
-            for curve in sisel:
-                library.add_item(curve.Name,
-                                 curve.ActivePrimitive.Geometry.Get2())
-        if inside_maya():
-            pass
-        self.Reload_OnClicked()
+        pass
 
     def Remove_OnClicked(self):
         selected = str(self.ui.items_listWidget.currentItem().text())
@@ -63,3 +57,34 @@ class RigIconLibrary(QtGui.QMainWindow):
         new_name = str(self.ui.items_listWidget.currentItem().text())
         library.rename_item(item, new_name)
         self.Reload_OnClicked()
+
+if inside_softimage():
+    from wishlib.si import sisel
+
+    class RigIconLibrary(RigIconLibraryInferface):
+
+        def Add_OnClicked(self):
+            for curve in sisel:
+                data = curve.ActivePrimitive.Geometry.Get2()
+                library.add_item(curve.Name, data)
+            self.Reload_OnClicked()
+
+elif inside_maya():
+    class RigIconLibrary(RigIconLibraryInferface):
+
+        def Add_OnClicked(self):
+            pass
+
+else:
+    class RigIconLibrary(RigIconLibraryInferface):
+
+        def __init__(self, *args, **kargs):
+            super(RigIconLibrary, self).__init__(*args, **kargs)
+            self.ui.add_button.setDisabled(True)
+
+if __name__ == "__main__":
+    app = QtGui.QApplication(sys.argv)
+    win = RigIconLibrary()
+    set_style(win, True)
+    win.show()
+    sys.exit(app.exec_())

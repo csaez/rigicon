@@ -39,7 +39,7 @@
        <property name="styleSheet">
         <string notr="true">font: 75 bold italic 18pt &quot;Trebuchet MS&quot;;
 color: rgb(220, 220, 220);
-background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(20, 20, 20, 255), stop:1 rgba(40, 40, 40, 255));</string>
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 0, 0, 100), stop:1 rgba(40, 40, 40, 0));</string>
        </property>
        <property name="text">
         <string>RigIconEditor </string>
@@ -552,104 +552,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
   <tabstop>sclz_spinBox</tabstop>
  </tabstops>
  <resources/>
- <connections>
-  <connection>
-   <sender>reload_button</sender>
-   <signal>clicked()</signal>
-   <receiver>Dialog</receiver>
-   <slot>reload_clicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>242</x>
-     <y>80</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>227</x>
-     <y>74</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>library_button</sender>
-   <signal>clicked()</signal>
-   <receiver>Dialog</receiver>
-   <slot>library_clicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>232</x>
-     <y>155</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>227</x>
-     <y>163</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>color_button</sender>
-   <signal>clicked()</signal>
-   <receiver>Dialog</receiver>
-   <slot>color_clicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>248</x>
-     <y>231</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>227</x>
-     <y>215</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>autoreload_checkBox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>Dialog</receiver>
-   <slot>autoreload_changed()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>17</x>
-     <y>104</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>227</x>
-     <y>108</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>shape_comboBox</sender>
-   <signal>currentIndexChanged(int)</signal>
-   <receiver>Dialog</receiver>
-   <slot>shape_changed()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>140</x>
-     <y>156</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>278</x>
-     <y>174</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>connect_button</sender>
-   <signal>clicked()</signal>
-   <receiver>Dialog</receiver>
-   <slot>connection_clicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>229</x>
-     <y>272</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>270</x>
-     <y>267</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
  <slots>
   <slot>reload_clicked()</slot>
   <slot>library_clicked()</slot>

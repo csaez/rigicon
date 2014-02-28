@@ -1,5 +1,5 @@
 # This file is part of rigicon
-# Copyright (C) 2014  Cesar Saez
+# Copyright (C) 2014 Cesar Saez
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,16 +14,17 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import sys
 
-from wishlib.si import si, sisel
-from wishlib.qt import QtGui, QtCore, loadUi
-from sisignals import signals, muteSIEvent
+from wishlib import inside_softimage, inside_maya
+from wishlib.qt import QtGui, loadUi, set_style
 
-from .. import icon
-from .. import library
+from rigicon.layout.library_gui import RigIconLibrary
+from rigicon import library
+# from rigicon import icon
 
 
-class RigIconEditor(QtGui.QDialog):
+class RigIconEditorInterface(QtGui.QDialog):
     DEFAULT_VALUES = {"iconname_lineEdit": "",
                       "connect_label": "",
                       "shape_comboBox": 0,
@@ -34,7 +35,7 @@ class RigIconEditor(QtGui.QDialog):
                       "sclx_spinBox": 1.0, "scly_spinBox": 1.0, "sclz_spinBox": 1.0}
 
     def __init__(self, parent=None):
-        super(RigIconEditor, self).__init__(parent)
+        super(RigIconEditorInterface, self).__init__(parent)
         uifile = os.path.join(os.path.dirname(__file__), "ui", "editor.ui")
         self.ui = loadUi(os.path.normpath(uifile), self)
         self.library_items = library.get_items()
@@ -51,29 +52,26 @@ class RigIconEditor(QtGui.QDialog):
         self.ui.shape_comboBox.addItem("Custom")
         for i in self.library_items:
             self.ui.shape_comboBox.addItem(i.get("Name"))
-        # connect signals and load values using selection
-        self._connect_signals()
+        # connect signals
+        self.ui.reload_button.clicked.connect(self.reload_clicked)
+        self.ui.library_button.clicked.connect(self.library_clicked)
+        self.ui.color_button.clicked.connect(self.color_clicked)
+        self.ui.autoreload_checkBox.toggled.connect(self.autoreload_changed)
+        self.ui.shape_comboBox.currentIndexChanged.connect(self.shape_changed)
+        self.ui.connect_button.clicked.connect(self.connection_clicked)
+        for spinbox in filter(lambda x: "_spinBox" in x, self.DEFAULT_VALUES.keys()):
+            getattr(self.ui, spinbox).editingFinished.connect(
+                lambda y=spinbox: self.spinbox_changed(y))
+        # connect selection events
+        self.connect_selection()
         self.reload_clicked()
 
     # SLOTS
     def reload_clicked(self):
-        if sisel.Count:
-            self.icons = [icon.Icon(x) for x in sisel if icon.is_icon(x)]
-        # set widget values
-        for key, value in self.get_data().iteritems():
-            widget = getattr(self.ui, key)
-            function = self.set_type.get(type(value))
-            # colorize multi widget
-            style = ""
-            if key in self.multi:
-                style = "background-color: rgb(35, 35, 35);"
-            widget.setStyleSheet(style)
-            # set widget values
-            if function is not None:
-                function(widget, value)
+        pass
 
     def library_clicked(self):
-        si.Commands("RigIcon Library").Execute()
+        RigIconLibrary(parent=self).show()
 
     def color_clicked(self):
         # get color from stylesheet
@@ -87,12 +85,12 @@ class RigIconEditor(QtGui.QDialog):
         self.set_color(color)
 
     def autoreload_changed(self, state):
-        muteSIEvent("siSelectionChange", not state)
+        pass
 
     def spinbox_changed(self, widget_name):
         attr = widget_name.split("_")[0].lower()
-        for i in self.icons:
-            setattr(i, attr, getattr(self, widget_name).value())
+        for x in self.icons:
+            setattr(x, attr, getattr(self, widget_name).value())
 
     def shape_changed(self, index):
         index = index - 1
@@ -102,48 +100,35 @@ class RigIconEditor(QtGui.QDialog):
             rigicon.shape = self.library_items[index].get("Name")
 
     def connection_clicked(self):
-        picked = si.PickObject()("PickedElement")
-        # set shape to every icon
-        for each in self.icons:
-            each.connect = picked
-            self.ui.connect_label.setText(str(picked))
+        pass
 
     # HELPER FUNCTIONS
     def closeEvent(self, event):
-        muteSIEvent("siSelectionChange", True)
-        self.close()
+        pass
 
-    def _connect_signals(self):
-        # connect siSelectionChange signal
-        signals.siSelectionChange.connect(self.reload_clicked)
-        bState = self.ui.autoreload_checkBox.isChecked()
-        muteSIEvent("siSelectionChange", not bState)
-        # connect spinbox signal
-        for spinbox in filter(lambda x: "_spinBox" in x, self.DEFAULT_VALUES.keys()):
-            widget = getattr(self, spinbox)
-            QtCore.QObject.connect(widget, QtCore.SIGNAL("editingFinished()"),
-                                   lambda y=spinbox: self.spinbox_changed(y))
+    def connect_selection(self):
+        pass
 
     def get_data(self):
         data = self.DEFAULT_VALUES.copy()
         self.multi = list()
-        for index, icon in enumerate(self.icons):
+        for index, rigicon in enumerate(self.icons):
             for k, v in data.iteritems():
                 attr = k.split("_")[0]
                 # get attr value
                 if attr == "shape":
                     items = [i["Name"].lower() for i in self.library_items]
                     try:
-                        value = items.index(icon.shape) + 1
+                        value = items.index(rigicon.shape) + 1
                     except:
                         value = 0
                 elif attr == "color":
-                    value = [icon.colorr, icon.colorg, icon.colorb]
+                    value = [rigicon.colorr, rigicon.colorg, rigicon.colorb]
                     value = map(lambda x: int(x * 255), value)
                 elif attr == "connect":
-                    value = str(icon.connect)
+                    value = str(rigicon.connect)
                 else:
-                    value = getattr(icon, attr)
+                    value = getattr(rigicon, attr)
                 # filter multi-selection
                 if index > 0:
                     if value != data.get(k):
@@ -163,3 +148,68 @@ class RigIconEditor(QtGui.QDialog):
         for rigicon in self.icons:
             for i, attr in enumerate(("colorr", "colorg", "colorb")):
                 setattr(rigicon, attr, color[i] / 255.0)
+
+if inside_softimage():
+    from wishlib.si import si, sisel
+    from sisignals import signals, muteSIEvent
+    from .. import icon
+
+    class RigIconEditor(RigIconEditorInterface):
+
+        def reload_clicked(self):
+            if sisel.Count:
+                self.icons = [icon.Icon(x) for x in sisel if icon.is_icon(x)]
+            # set widget values
+            for key, value in self.get_data().iteritems():
+                widget = getattr(self.ui, key)
+                function = self.set_type.get(type(value))
+                # colorize multi widget
+                style = ""
+                if key in self.multi:
+                    style = "background-color: rgb(35, 35, 35);"
+                widget.setStyleSheet(style)
+                # set widget values
+                if function is not None:
+                    function(widget, value)
+
+        def library_clicked(self):
+            si.Commands("RigIcon Library").Execute()
+
+        def connection_clicked(self):
+            picked = si.PickObject()("PickedElement")
+            # set shape to every icon
+            for each in self.icons:
+                each.connect = picked
+                self.ui.connect_label.setText(str(picked))
+
+        def autoreload_changed(self, state):
+            muteSIEvent("siSelectionChange", not state)
+
+        def closeEvent(self, event):
+            muteSIEvent("siSelectionChange", True)
+            self.close()
+
+        def connect_selection(self):
+            # connect siSelectionChange signal
+            signals.siSelectionChange.connect(self.reload_clicked)
+            bState = self.ui.autoreload_checkBox.isChecked()
+            muteSIEvent("siSelectionChange", not bState)
+
+elif inside_maya():
+    from wishlib.ma import show_qt
+
+    class RigIconEditor(RigIconEditorInterface):
+
+        def library_clicked(self):
+            show_qt(RigIconLibrary)
+
+else:
+    class RigIconEditor(RigIconEditorInterface):
+        pass
+
+if __name__ == "__main__":
+    app = QtGui.QApplication(sys.argv)
+    win = RigIconEditor()
+    set_style(win, True)
+    win.show()
+    sys.exit(app.exec_())
