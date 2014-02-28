@@ -21,7 +21,7 @@ from wishlib.qt import QtGui, loadUi, set_style
 
 from rigicon.layout.library_gui import RigIconLibrary
 from rigicon import library
-# from rigicon import icon
+from rigicon import icon
 
 
 class RigIconEditorInterface(QtGui.QDialog):
@@ -152,7 +152,6 @@ class RigIconEditorInterface(QtGui.QDialog):
 if inside_softimage():
     from wishlib.si import si, sisel
     from sisignals import signals, muteSIEvent
-    from .. import icon
 
     class RigIconEditor(RigIconEditorInterface):
 
