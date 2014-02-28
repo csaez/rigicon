@@ -16,14 +16,14 @@
 import os
 
 from wishlib.si import si, sisel
-from wishlib.qt import QtGui, QtCore, loadUi, widgets
+from wishlib.qt import QtGui, QtCore, loadUi
 from sisignals import signals, muteSIEvent
 
 from .. import icon
 from .. import library
 
 
-class RigIconEditor(widgets.QDialog):
+class RigIconEditor(QtGui.QDialog):
     DEFAULT_VALUES = {"iconname_lineEdit": "",
                       "connect_label": "",
                       "shape_comboBox": 0,

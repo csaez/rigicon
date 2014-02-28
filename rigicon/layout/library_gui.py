@@ -14,19 +14,23 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-
-from wishlib.qt import QtGui, QtCore, loadUi, widgets
-from wishlib.si import sisel
-
+from wishlib import inside_maya, inside_softimage
+from wishlib.qt import QtGui, QtCore, loadUi
 from .. import library
 
 
-class RigIconLibrary(widgets.QMainWindow):
+class RigIconLibrary(QtGui.QMainWindow):
 
     def __init__(self, parent=None):
         super(RigIconLibrary, self).__init__(parent)
         uifile = os.path.join(os.path.dirname(__file__), "ui", "library.ui")
         self.ui = loadUi(os.path.normpath(uifile), self)
+        # signals
+        self.ui.add_button.clicked.connect(self.Add_OnClicked)
+        self.ui.remove_button.clicked.connect(self.Remove_OnClicked)
+        self.ui.reload_button.clicked.connect(self.Reload_OnClicked)
+        self.ui.items_listWidget.itemChanged.connect(self.Rename_OnChanged)
+        # load items
         self.Reload_OnClicked()
 
     def Reload_OnClicked(self):
@@ -39,8 +43,13 @@ class RigIconLibrary(widgets.QMainWindow):
             self.ui.items_listWidget.addItem(item)
 
     def Add_OnClicked(self):
-        for curve in sisel:
-            library.add_item(curve.Name, curve.ActivePrimitive.Geometry.Get2())
+        if inside_softimage():
+            from wishlib.si import sisel
+            for curve in sisel:
+                library.add_item(curve.Name,
+                                 curve.ActivePrimitive.Geometry.Get2())
+        if inside_maya():
+            pass
         self.Reload_OnClicked()
 
     def Remove_OnClicked(self):
