@@ -14,13 +14,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from wishlib import inside_softimage, inside_maya
-from .icon_interface import IconInterface, is_icon
 
 if inside_softimage():
     from .icon_softimage import Icon, is_icon
 elif inside_maya():
-    class Icon(IconInterface):
-        pass
+    from .icon_maya import Icon, is_icon
 else:
+    from .icon_interface import IconInterface, is_icon
+
     class Icon(IconInterface):
         pass
