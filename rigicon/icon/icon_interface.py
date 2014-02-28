@@ -45,9 +45,6 @@ class IconInterface(object):
     def new(cls, *args, **kwds):
         return cls.create(*args, **kwds)
 
-    def __new__(cls, obj):
-        return cls(obj)
-
     def __init__(self, obj):
         super(IconInterface, self).__init__()
         for k, v in DEFAULT_DATA.iteritems():

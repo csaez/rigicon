@@ -17,14 +17,16 @@ import os
 import sys
 
 from wishlib import inside_softimage, inside_maya
-from wishlib.qt import QtGui, loadUi, set_style
+from wishlib.qt import QtGui, loadUiType, set_style
 
 from rigicon.layout.library_gui import RigIconLibrary
 from rigicon import library
 from rigicon import icon
+ui_file = os.path.join(os.path.dirname(__file__), "ui", "editor.ui")
+form, base = loadUiType(ui_file)
 
 
-class RigIconEditorInterface(QtGui.QDialog):
+class RigIconEditorInterface(form, base):
     DEFAULT_VALUES = {"iconname_lineEdit": "",
                       "connect_label": "",
                       "shape_comboBox": 0,
@@ -36,8 +38,7 @@ class RigIconEditorInterface(QtGui.QDialog):
 
     def __init__(self, parent=None):
         super(RigIconEditorInterface, self).__init__(parent)
-        uifile = os.path.join(os.path.dirname(__file__), "ui", "editor.ui")
-        self.ui = loadUi(os.path.normpath(uifile), self)
+        self.setupUi(self)
         self.library_items = library.get_items()
         self.icons = list()
         self.multi = list()  # hold common multi selection values
@@ -48,19 +49,19 @@ class RigIconEditorInterface(QtGui.QDialog):
                          float: lambda widget, value: widget.setValue(value),
                          list: lambda widget, value: self.set_color(value)}
         # fill gui values
-        self.ui.shape_comboBox.clear()
-        self.ui.shape_comboBox.addItem("Custom")
+        self.shape_comboBox.clear()
+        self.shape_comboBox.addItem("Custom")
         for i in self.library_items:
-            self.ui.shape_comboBox.addItem(i.get("Name"))
+            self.shape_comboBox.addItem(i.get("Name"))
         # connect signals
-        self.ui.reload_button.clicked.connect(self.reload_clicked)
-        self.ui.library_button.clicked.connect(self.library_clicked)
-        self.ui.color_button.clicked.connect(self.color_clicked)
-        self.ui.autoreload_checkBox.toggled.connect(self.autoreload_changed)
-        self.ui.shape_comboBox.currentIndexChanged.connect(self.shape_changed)
-        self.ui.connect_button.clicked.connect(self.connection_clicked)
+        self.reload_button.clicked.connect(self.reload_clicked)
+        self.library_button.clicked.connect(self.library_clicked)
+        self.color_button.clicked.connect(self.color_clicked)
+        self.autoreload_checkBox.toggled.connect(self.autoreload_changed)
+        self.shape_comboBox.currentIndexChanged.connect(self.shape_changed)
+        self.connect_button.clicked.connect(self.connection_clicked)
         for spinbox in filter(lambda x: "_spinBox" in x, self.DEFAULT_VALUES.keys()):
-            getattr(self.ui, spinbox).editingFinished.connect(
+            getattr(self, spinbox).editingFinished.connect(
                 lambda y=spinbox: self.spinbox_changed(y))
         # connect selection events
         self.connect_selection()
@@ -75,7 +76,7 @@ class RigIconEditorInterface(QtGui.QDialog):
 
     def color_clicked(self):
         # get color from stylesheet
-        style = str(self.ui.color_button.styleSheet())
+        style = str(self.color_button.styleSheet())
         color = list(eval(style.split("rgb")[-1][:-1]))
         # launch color picker
         color_dialog = QtGui.QColorDialog(self)
@@ -143,7 +144,7 @@ class RigIconEditorInterface(QtGui.QDialog):
             return
         # set color via stylesheet
         style = "background-color: rgb({0}, {1}, {2});".format(*color)
-        self.ui.color_button.setStyleSheet(style)
+        self.color_button.setStyleSheet(style)
         # set rigicon color
         for rigicon in self.icons:
             for i, attr in enumerate(("colorr", "colorg", "colorb")):
@@ -160,7 +161,7 @@ if inside_softimage():
                 self.icons = [icon.Icon(x) for x in sisel if icon.is_icon(x)]
             # set widget values
             for key, value in self.get_data().iteritems():
-                widget = getattr(self.ui, key)
+                widget = getattr(self, key)
                 function = self.set_type.get(type(value))
                 # colorize multi widget
                 style = ""
@@ -179,7 +180,7 @@ if inside_softimage():
             # set shape to every icon
             for each in self.icons:
                 each.connect = picked
-                self.ui.connect_label.setText(str(picked))
+                self.connect_label.setText(str(picked))
 
         def autoreload_changed(self, state):
             muteSIEvent("siSelectionChange", not state)
@@ -191,7 +192,7 @@ if inside_softimage():
         def connect_selection(self):
             # connect siSelectionChange signal
             signals.siSelectionChange.connect(self.reload_clicked)
-            bState = self.ui.autoreload_checkBox.isChecked()
+            bState = self.autoreload_checkBox.isChecked()
             muteSIEvent("siSelectionChange", not bState)
 
 elif inside_maya():

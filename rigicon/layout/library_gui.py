@@ -16,45 +16,46 @@
 import os
 import sys
 from wishlib import inside_maya, inside_softimage
-from wishlib.qt import QtGui, QtCore, loadUi, set_style
+from wishlib.qt import QtGui, QtCore, loadUiType, set_style
 from rigicon import library
+ui_file = os.path.join(os.path.dirname(__file__), "ui", "library.ui")
+form, base = loadUiType(ui_file)
 
 
-class RigIconLibraryInferface(QtGui.QMainWindow):
+class RigIconLibraryInferface(form, base):
 
     def __init__(self, parent=None):
         super(RigIconLibraryInferface, self).__init__(parent)
-        uifile = os.path.join(os.path.dirname(__file__), "ui", "library.ui")
-        self.ui = loadUi(os.path.normpath(uifile), self)
+        self.setupUi(self)
         # signals
-        self.ui.add_button.clicked.connect(self.Add_OnClicked)
-        self.ui.remove_button.clicked.connect(self.Remove_OnClicked)
-        self.ui.reload_button.clicked.connect(self.Reload_OnClicked)
-        self.ui.items_listWidget.itemChanged.connect(self.Rename_OnChanged)
+        self.add_button.clicked.connect(self.Add_OnClicked)
+        self.remove_button.clicked.connect(self.Remove_OnClicked)
+        self.reload_button.clicked.connect(self.Reload_OnClicked)
+        self.items_listWidget.itemChanged.connect(self.Rename_OnChanged)
         # load items
         self.Reload_OnClicked()
 
     def Reload_OnClicked(self):
-        self.ui.items_listWidget.clear()
+        self.items_listWidget.clear()
         for library_item in library.get_items():
             item = QtGui.QListWidgetItem(library_item.get("Name"))
             item.setFlags(QtCore.Qt.ItemIsSelectable |
                           QtCore.Qt.ItemIsEditable |
                           QtCore.Qt.ItemIsEnabled)
-            self.ui.items_listWidget.addItem(item)
+            self.items_listWidget.addItem(item)
 
     def Add_OnClicked(self):
         pass
 
     def Remove_OnClicked(self):
-        selected = str(self.ui.items_listWidget.currentItem().text())
+        selected = str(self.items_listWidget.currentItem().text())
         library.remove_item(selected)
         self.Reload_OnClicked()
 
     def Rename_OnChanged(self, item):
-        index = self.ui.items_listWidget.currentRow()
+        index = self.items_listWidget.currentRow()
         item = [i for i in library.get_items()][index]
-        new_name = str(self.ui.items_listWidget.currentItem().text())
+        new_name = str(self.items_listWidget.currentItem().text())
         library.rename_item(item, new_name)
         self.Reload_OnClicked()
 
@@ -80,7 +81,7 @@ else:
 
         def __init__(self, *args, **kargs):
             super(RigIconLibrary, self).__init__(*args, **kargs)
-            self.ui.add_button.setDisabled(True)
+            self.add_button.setDisabled(True)
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
