@@ -14,6 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
+
 from maya import OpenMayaMPx
 from wishlib.ma import show_qt
 
@@ -41,28 +42,39 @@ class rigIconEditor(OpenMayaMPx.MPxCommand):
         show_qt(RigIconEditor)
 
 
-class rigIconCreator(OpenMayaMPx.MPxCommand):
+class rigIcon(OpenMayaMPx.MPxCommand):
 
     def __init__(self):
-        super(rigIconCreator, self).__init__()
+        super(rigIcon, self).__init__()
 
     # Invoked when the command is run.
     def doIt(self, argList):
         from rigicon.icon import Icon
         Icon.new()
 
-plugin_cmds = {"rigIconLibrary": rigIconLibrary,
-               "rigIconEditor": rigIconEditor,
+
+def rigIconLibraryCreator():
+    return OpenMayaMPx.asMPxPtr(rigIconLibrary())
+
+
+def rigIconEditorCreator():
+    return OpenMayaMPx.asMPxPtr(rigIconEditor())
+
+
+def rigIconCreator():
+    return OpenMayaMPx.asMPxPtr(rigIcon())
+
+plugin_cmds = {"rigIconLibrary": rigIconLibraryCreator,
+               "rigIconEditor": rigIconEditorCreator,
                "rigIcon": rigIconCreator}
 
 
 # Initialize the script plug-in
 def initializePlugin(mobject):
     mplugin = OpenMayaMPx.MFnPlugin(mobject)
-    for cmd_name, cmd_class in plugin_cmds.iteritems():
+    for cmd_name, cmd_creator in plugin_cmds.iteritems():
         try:
-            mplugin.registerCommand(
-                cmd_name, lambda x=cmd_class(): OpenMayaMPx.asMPxPtr(x))
+            mplugin.registerCommand(cmd_name, cmd_creator)
         except:
             sys.stderr.write("Failed to register command: %s\n" % cmd_name)
             raise
