@@ -18,6 +18,7 @@ import sys
 
 from wishlib import inside_softimage, inside_maya
 from wishlib.qt import QtGui, loadUiType, set_style
+import wishlib.ma as app
 
 from rigicon.layout.library_gui import RigIconLibrary
 from rigicon import library
@@ -202,6 +203,22 @@ elif inside_maya():
 
         def library_clicked(self):
             show_qt(RigIconLibrary)
+
+        def reload_clicked(self):
+            if app.selection():
+                self.icons = [icon.Icon(x) for x in app.selection() if icon.is_icon(x)]
+                # set widget values
+                for key, value in self.get_data().iteritems():
+                    widget = getattr(self, key)
+                    function = self.set_type.get(type(value))
+                    # colorize multi widget
+                    style = ""
+                    if key in self.multi:
+                        style = "background-color: rgb(35, 35, 35);"
+                    widget.setStyleSheet(style)
+                    # set widget values
+                    if function is not None:
+                        function(widget, value)
 
 else:
     class RigIconEditor(RigIconEditorInterface):
