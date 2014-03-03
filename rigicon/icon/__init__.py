@@ -18,7 +18,9 @@ from wishlib import inside_softimage, inside_maya
 if inside_softimage():
     from .icon_softimage import Icon, is_icon
 elif inside_maya():
-    from .icon_maya import Icon, is_icon
+    import icon_maya
+    reload(icon_maya)
+    from icon_maya import Icon, is_icon
 else:
     from .icon_interface import IconInterface, is_icon
 

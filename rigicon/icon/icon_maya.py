@@ -17,7 +17,7 @@ from .. import library
 
 import wishlib.ma as app
 
-DEFAULT_DATA = {"_size": 1.0, "_shape": "Null", "connect": None,
+DEFAULT_DATA = {"size": 1.0, "shape": "Null", "connect": None,
                 "colorr": 1.0, "colorg": 0.882, "colorb": 0.0,
                 "posx": 0.0, "posy": 0.0, "posz": 0.0,
                 "rotx": 0.0, "roty": 0.0, "rotz": 0.0,
@@ -56,6 +56,15 @@ class Icon(app.Wrapper):
         print "ERROR:", obj, "type isnt an icon object."
 
     def __init__(self, obj):
+
+        #adding exceptions for class properties
+        exceptions = ['connect', 'size', 'connect_line',
+                      'shape']
+
+        for e in exceptions:
+            self.EXCEPTIONS.append(e)
+
+        #case of passing in a string
         if isinstance(obj, str):
             obj = app.Object(obj)
 
@@ -97,16 +106,54 @@ class Icon(app.Wrapper):
         item = item[0]
         self.obj.Geometry = item
 
+        #setting size
+        self.Scale(self.size)
+
     @property
     def size(self):
+        if not hasattr(self, "_size"):
+            self._size = 1
         return self._size
 
     @size.setter
     def size(self, value):
-        if hasattr(self, "_size") and self._size == value:
-            return
+        #resetting size
+        self.Scale(1.0 / self.size)
 
-        self.Scale((1.0 / self.size), self.obj.node + '.cv[*]')
-        self.Scale(value, self.obj.node + '.cv[*]')
+        #setting new size
+        self.Scale(value)
 
         self._size = value
+
+    @property
+    def connect(self):
+        if not hasattr(self, "_connect"):
+            self._connect = None
+        return self._connect
+
+    @connect.setter
+    def connect(self, obj):
+        if obj:
+            if self.connect:
+                if not self.connect.node == obj.node:
+                    try:
+                        self.connect_line.Delete()
+                    except:
+                        pass
+                    self.connect_line = app.createConnect([self.obj, obj])
+            else:
+                self.connect_line = app.createConnect([self.obj, obj])
+        else:
+            self.connect_line.Delete()
+            self.connect_line = obj
+        self._connect = obj
+
+    @property
+    def connect_line(self):
+        if not hasattr(self, "_connect_line"):
+            self._connect_line = None
+        return self._connect_line
+
+    @connect_line.setter
+    def connect_line(self, obj):
+        self._connect_line = obj

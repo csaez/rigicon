@@ -220,6 +220,18 @@ elif inside_maya():
                     if function is not None:
                         function(widget, value)
 
+        def connection_clicked(self):
+            if len(app.selection()) == 1:
+                # set shape to every icon
+                for each in self.icons:
+                    each.connect = app.selection()[0]
+                    self.connect_label.setText(str(app.selection()[0]))
+            if len(app.selection()) == 0:
+                # set shape to every icon
+                for each in self.icons:
+                    each.connect = None
+                    self.connect_label.setText(str(None))
+
 else:
     class RigIconEditor(RigIconEditorInterface):
         pass
