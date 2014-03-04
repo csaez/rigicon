@@ -16,12 +16,14 @@
 from .. import library
 
 import wishlib.ma as app
+reload(app)
 
 DEFAULT_DATA = {"size": 1.0, "shape": "Null", "connect": None,
                 "colorr": 1.0, "colorg": 0.882, "colorb": 0.0,
                 "posx": 0.0, "posy": 0.0, "posz": 0.0,
                 "rotx": 0.0, "roty": 0.0, "rotz": 0.0,
-                "sclx": 1.0, "scly": 1.0, "sclz": 1.0}
+                "sclx": 1.0, "scly": 1.0, "sclz": 1.0,
+                "sizex": 1.0, "sizey": 1.0, "sizez": 1.0}
 DATA_LINK = "RigIcon_Data"
 
 
@@ -59,7 +61,10 @@ class Icon(app.Wrapper):
 
         #adding exceptions for class properties
         exceptions = ['connect', 'size', 'connect_line',
-                      'shape']
+                      'shape', "posx", "posy", "posz",
+                      "rotx", "roty", "rotz",
+                      "sclx", "scly", "sclz",
+                      "sizex", "sizey", "sizez"]
 
         for e in exceptions:
             self.EXCEPTIONS.append(e)
@@ -72,6 +77,128 @@ class Icon(app.Wrapper):
         for k, v in DEFAULT_DATA.iteritems():
             if not hasattr(self, k):
                 setattr(self, k, v)
+
+    def _returnAttr(self, attr, value=0.0):
+        if not hasattr(self, '_' + attr):
+            setattr(self, '_' + attr, value)
+        return getattr(self, '_' + attr)
+
+    @property
+    def posx(self):
+        return self._returnAttr('posx')
+
+    @posx.setter
+    def posx(self, value):
+        self.Translate((self.posx * -1), 0, 0)
+        self.Translate(value, 0, 0)
+        self._posx = value
+
+    @property
+    def posy(self):
+        return self._returnAttr('posy')
+
+    @posy.setter
+    def posy(self, value):
+        self.Translate(0, (self.posy * -1), 0)
+        self.Translate(0, value, 0)
+        self._posy = value
+
+    @property
+    def posz(self):
+        return self._returnAttr('posz')
+
+    @posz.setter
+    def posz(self, value):
+        self.Translate(0, 0, (self.posz * -1))
+        self.Translate(0, 0, value)
+        self._posz = value
+
+    @property
+    def rotx(self):
+        return self._returnAttr('rotx')
+
+    @rotx.setter
+    def rotx(self, value):
+        self.Rotate((self.rotx * -1), 0, 0)
+        self.Rotate(value, 0, 0)
+        self._rotx = value
+
+    @property
+    def roty(self):
+        return self._returnAttr('roty')
+
+    @roty.setter
+    def roty(self, value):
+        self.Rotate(0, (self.roty * -1), 0)
+        self.Rotate(0, value, 0)
+        self._roty = value
+
+    @property
+    def rotz(self):
+        return self._returnAttr('rotz')
+
+    @rotz.setter
+    def rotz(self, value):
+        self.Rotate(0, 0, (self.rotz * -1))
+        self.Rotate(0, 0, value)
+        self._rotz = value
+
+    @property
+    def sizex(self):
+        return self._returnAttr('sizex', 1)
+
+    @sizex.setter
+    def sizex(self, value):
+        self.Scale(1.0 / self.sizex, 1, 1)
+        self.Scale(value, 1, 1)
+        self._sizex = value
+
+    @property
+    def sizey(self):
+        return self._returnAttr('sizey', 1)
+
+    @sizey.setter
+    def sizey(self, value):
+        self.Scale(1, 1.0 / self.sizey, 1)
+        self.Scale(1, value, 1)
+        self._sizey = value
+
+    @property
+    def sizez(self):
+        return self._returnAttr('sizez', 1)
+
+    @sizez.setter
+    def sizez(self, value):
+        self.Scale(1, 1, 1.0 / self.sizez)
+        self.Scale(1, 1, value)
+        self._sizez = value
+
+    @property
+    def sclx(self):
+        return self._returnAttr('sclx', 1)
+
+    @sclx.setter
+    def sclx(self, value):
+        self.sizex = value * self.sizex
+        self._sclx = value
+
+    @property
+    def scly(self):
+        return self._returnAttr('scly', 1)
+
+    @scly.setter
+    def scly(self, value):
+        self.sizey = value * self.sizey
+        self._scly = value
+
+    @property
+    def sclz(self):
+        return self._returnAttr('sclz', 1)
+
+    @sclz.setter
+    def sclz(self, value):
+        self.sizez = value * self.sizez
+        self._sclz = value
 
     @property
     def iconname(self):
@@ -106,8 +233,11 @@ class Icon(app.Wrapper):
         item = item[0]
         self.obj.Geometry = item
 
-        #setting size
-        self.Scale(self.size)
+        #setting transforms
+        self.Translate(self.posx, self.posy, self.posz)
+        self.Rotate(self.rotx, self.roty, self.rotz)
+        self.Scale(self.sizex, self.sizey,
+                   self.sizez)
 
     @property
     def size(self):
@@ -117,11 +247,9 @@ class Icon(app.Wrapper):
 
     @size.setter
     def size(self, value):
-        #resetting size
-        self.Scale(1.0 / self.size)
-
-        #setting new size
-        self.Scale(value)
+        self.sizex += value - self.size
+        self.sizey += value - self.size
+        self.sizez += value - self.size
 
         self._size = value
 
