@@ -32,7 +32,6 @@ class RigIconEditorInterface(form, base):
                       "connect_label": "",
                       "shape_comboBox": 0,
                       "size_spinBox": 1.0,
-                      "color_button": [0, 0, 0],
                       "posx_spinBox": 0.0, "posy_spinBox": 0.0, "posz_spinBox": 0.0,
                       "rotx_spinBox": 0.0, "roty_spinBox": 0.0, "rotz_spinBox": 0.0,
                       "sclx_spinBox": 1.0, "scly_spinBox": 1.0, "sclz_spinBox": 1.0}
@@ -125,8 +124,9 @@ class RigIconEditorInterface(form, base):
                     except:
                         value = 0
                 elif attr == "color":
-                    value = [rigicon.colorr, rigicon.colorg, rigicon.colorb]
-                    value = map(lambda x: int(x * 255), value)
+                    #value = [rigicon.colorr, rigicon.colorg, rigicon.colorb]
+                    #value = map(lambda x: int(x * 255), value)
+                    pass
                 elif attr == "connect":
                     value = str(rigicon.connect)
                 else:
@@ -198,6 +198,7 @@ if inside_softimage():
 
 elif inside_maya():
     from wishlib.ma import show_qt
+    import pymel.core as pm
 
     class RigIconEditor(RigIconEditorInterface):
 
@@ -205,10 +206,12 @@ elif inside_maya():
             show_qt(RigIconLibrary)
 
         def reload_clicked(self):
-            if app.selection():
-                self.icons = [icon.Icon(x) for x in app.selection() if icon.is_icon(x)]
+            sel = pm.ls(selection=True)
+            if sel:
+                self.icons = [icon.Icon(x) for x in sel if icon.is_icon(x)]
                 # set widget values
                 for key, value in self.get_data().iteritems():
+                    print key
                     widget = getattr(self, key)
                     function = self.set_type.get(type(value))
                     # colorize multi widget
@@ -221,12 +224,13 @@ elif inside_maya():
                         function(widget, value)
 
         def connection_clicked(self):
-            if len(app.selection()) == 1:
+            sel = pm.ls(selection=True)
+            if len(sel) == 1:
                 # set shape to every icon
                 for each in self.icons:
-                    each.connect = app.selection()[0]
-                    self.connect_label.setText(str(app.selection()[0]))
-            if len(app.selection()) == 0:
+                    each.connect = sel[0]
+                    self.connect_label.setText(str(sel[0]))
+            if len(sel) == 0:
                 # set shape to every icon
                 for each in self.icons:
                     each.connect = None
