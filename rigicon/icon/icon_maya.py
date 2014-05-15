@@ -1,5 +1,5 @@
 # This file is part of rigicon
-# Copyright (C) 2014  Cesar Saez
+# Copyright (C) 2014 Cesar Saez
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,13 +14,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import types
-
 from pymel import core as pm
-
+from wishlib import Wrapper
 from .. import library
-
-import wishlib.ma as app
-reload(app)
 
 DEFAULT_DATA = {"size": 1.0, "shape": "Null", "connect": None,
                 "_color": 1, "_posx": 0.0, "_posy": 0.0,
@@ -32,13 +28,12 @@ DEFAULT_DATA = {"size": 1.0, "shape": "Null", "connect": None,
 
 def is_icon(obj):
     attrs = pm.listAttr(obj, ud=True)
-    if obj.getShape().nodeType() == 'nurbsCurve' and \
-     'metadata_namespace' in attrs:
+    if obj.getShape().nodeType() == "nurbsCurve" and "metadata_namespace" in attrs:
         return True
     return False
 
 
-class Icon(app.Wrapper):
+class Icon(Wrapper):
 
     @classmethod
     def create(cls, name="rigicon", **options):
@@ -54,39 +49,21 @@ class Icon(app.Wrapper):
     def new(cls, *args, **kwds):
         return cls.create(*args, **kwds)
 
-    def __new__(cls, obj='rigicon'):
+    def __new__(cls, obj):
+        try:
+            obj = pm.PyNode(obj)
+            if obj.getShape().nodeType() == "nurbsCurve":
+                return Wrapper.__new__(cls, obj)
+        except:
+            print "ERROR:", obj, "type isnt an icon object."
 
-        if isinstance(obj, str):
-            try:
-                obj = pm.PyNode(obj)
-            except:
-                node = pm.circle(ch=False)[0]
-                obj = pm.rename(node, obj)
-
-        if obj.getShape().nodeType() == 'nurbsCurve':
-            return app.Wrapper.__new__(cls, obj)
-        print "ERROR:", obj, "type isnt an icon object."
-
-    def __init__(self, obj='rigicon'):
-
-        #adding exceptions for class properties
-        exceptions = ['iconname', 'shape', 'connect',
-                      'sizex', 'sizey', 'sizez',
-                      'posx', 'posy', 'posz',
-                      'rotx', 'roty', 'rotz',
-                      'connect_line', 'size',
-                      'color']
-
-        for e in exceptions:
-            self.EXCEPTIONS.append(e)
-
+    def __init__(self, obj):
         super(Icon, self).__init__(obj)
         for k, v in DEFAULT_DATA.iteritems():
             if not hasattr(self, k):
                 setattr(self, k, v)
-
-        #updating icon
-        self.shape = self.shape
+        # updating icon
+        # self.shape = self.shape
 
     def scale(self, x, y, z):
         with pm.UndoChunk():
@@ -96,7 +73,7 @@ class Icon(app.Wrapper):
             centerZ = (bb[2] + bb[5]) / 2.0
 
             for shp in self.node.getShapes():
-                pm.scale(pm.PyNode(shp + '.cv[*]'), [x, y, z],
+                pm.scale(pm.PyNode(shp + ".cv[*]"), [x, y, z],
                          pivot=[centerX, centerY, centerZ])
 
     def rotate(self, x, y, z):
@@ -107,13 +84,13 @@ class Icon(app.Wrapper):
             centerZ = (bb[2] + bb[5]) / 2.0
 
             for shp in self.node.getShapes():
-                pm.rotate(pm.PyNode(shp + '.cv[*]'), [x, y, z],
-                         pivot=[centerX, centerY, centerZ])
+                pm.rotate(pm.PyNode(shp + ".cv[*]"), [x, y, z],
+                          pivot=[centerX, centerY, centerZ])
 
     def translate(self, x, y, z):
         with pm.UndoChunk():
             for shp in self.node.getShapes():
-                pm.move(pm.PyNode(shp + '.cv[*]'), [x, y, z],
+                pm.move(pm.PyNode(shp + ".cv[*]"), [x, y, z],
                         r=True)
 
     @property
@@ -276,14 +253,14 @@ class Icon(app.Wrapper):
                     if x["Name"].lower() == value]
             if not len(item):
                 self._shape = "Custom"
-                print "ERROR:", value, "wasnt found in library."
+                print "ERROR:", value, "not found in library."
                 return
             self._shape = value
 
-            #storing selection
+            # storing selection
             sel = pm.ls(selection=True)
 
-            #generating curves from data
+            # generating curves from data
             data = item[0]
             crvs = list()
             for i in range(data["Count"]):
@@ -294,22 +271,20 @@ class Icon(app.Wrapper):
                     pts.append(pts[0])
                 crvs.append(pm.curve(degree=1, p=pts))
 
-            #deleting existing curves
+            # deleting existing curves
             for shp in self.node.getShapes():
                 pm.delete(shp)
 
-            #combining curves
+            # combining curves
             for crv in crvs:
                 shp = crv.getShape()
-                shp = pm.rename(shp, self.node + 'Shape')
+                shp = pm.rename(shp, self.node + "Shape")
                 pm.parent(shp, self.node, r=True, s=True)
                 pm.delete(crv)
 
-            #restoring selection
+            # restoring selection
             if sel:
                 pm.select(sel)
-            else:
-                pm.select(cl=True)
 
     @property
     def connect(self):
@@ -349,7 +324,7 @@ class Icon(app.Wrapper):
 
         with pm.UndoChunk():
 
-            #storing selection
+            # storing selection
             sel = pm.ls(selection=True)
 
             objs = [self.node, destination]
@@ -365,14 +340,14 @@ class Icon(app.Wrapper):
 
             index = 0
             for obj in objs:
-                cluster = pm.cluster(crv + '.cv[%s]' % index)[1]
+                cluster = pm.cluster(crv + ".cv[%s]" % index)[1]
                 pm.parent(cluster, objs[index])
-                pm.setAttr(cluster + '.visibility', 0)
+                pm.setAttr(cluster + ".visibility", 0)
                 index += 1
 
-            #restoring selection
+            # restoring selection
             if sel:
                 pm.select(sel)
 
-            crv = pm.rename(crv, self.node + '_connect')
+            crv = pm.rename(crv, self.node + "_connect")
             return crv

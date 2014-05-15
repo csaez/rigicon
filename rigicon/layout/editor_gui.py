@@ -18,11 +18,11 @@ import sys
 
 from wishlib import inside_softimage, inside_maya
 from wishlib.qt import QtGui, QtCore, loadUiType, set_style
-import wishlib.ma as app
 
 from rigicon.layout.library_gui import RigIconLibrary
 from rigicon import library
 from rigicon import icon
+
 ui_file = os.path.join(os.path.dirname(__file__), "ui", "editor.ui")
 form, base = loadUiType(ui_file)
 
@@ -70,6 +70,7 @@ class MPalette(QtGui.QDialog):
         palette = cls(parent)
         palette.exec_()
         return palette._color
+
 
 class RigIconEditorInterface(form, base):
     DEFAULT_VALUES = {"iconname_lineEdit": "",
@@ -243,16 +244,10 @@ if inside_softimage():
 elif inside_maya():
     from wishlib.ma import show_qt
     import pymel.core as pm
-    import maya.OpenMayaUI as omui
-    from shiboken import wrapInstance
-
-    def maya_main_window():
-        main_window_ptr = omui.MQtUtil.mainWindow()
-        return wrapInstance(long(main_window_ptr), QtGui.QWidget)
 
     class RigIconEditor(RigIconEditorInterface):
 
-        def __init__(self, parent=maya_main_window()):
+        def __init__(self, parent):
             super(RigIconEditor, self).__init__(parent)
 
         def library_clicked(self):
