@@ -17,7 +17,7 @@ import os
 import sys
 
 from wishlib import inside_softimage, inside_maya
-from wishlib.qt import QtGui, loadUiType, set_style
+from wishlib.qt import QtGui, QtCore, loadUiType, set_style
 import wishlib.ma as app
 
 from rigicon.layout.library_gui import RigIconLibrary
@@ -26,6 +26,50 @@ from rigicon import icon
 ui_file = os.path.join(os.path.dirname(__file__), "ui", "editor.ui")
 form, base = loadUiType(ui_file)
 
+
+class MPalette(QtGui.QDialog):
+
+    def __init__(self, parent=None):
+        super(MPalette, self).__init__(parent)
+        self._color = -1
+        self._styleSheet = ""
+        self.setupUi()
+        for i, b in enumerate(self.buttons):
+            self.setButtonColor(
+                b, [x * 255 for x in pm.colorIndex(i + 1, q=True)])
+            b.clicked.connect(lambda index=i + 1: self.accept(index))
+
+    def setupUi(self):
+        self.setWindowTitle("ColorPicker")
+        self.gridLayout = QtGui.QGridLayout(self)
+        self.buttons = list()
+        for i in range(31):
+            btn = QtGui.QPushButton(self)
+            sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Maximum,
+                                           QtGui.QSizePolicy.Maximum)
+            sizePolicy.setHorizontalStretch(0)
+            sizePolicy.setVerticalStretch(0)
+            sizePolicy.setHeightForWidth(
+                btn.sizePolicy().hasHeightForWidth())
+            btn.setSizePolicy(sizePolicy)
+            btn.setMaximumSize(QtCore.QSize(25, 25))
+            btn.setText(str(i + 1))
+            self.gridLayout.addWidget(btn, int(i / 8), i % 8, 1, 1)
+            self.buttons.append(btn)
+
+    def setButtonColor(self, button, color):
+        s = "background-color: rgb({0}, {1}, {2});".format(*color)
+        button.setStyleSheet(s)
+
+    def accept(self, index=None):
+        self._color = index
+        super(MPalette, self).accept()
+
+    @classmethod
+    def getColor(cls, parent):
+        palette = cls(parent)
+        palette.exec_()
+        return palette._color
 
 class RigIconEditorInterface(form, base):
     DEFAULT_VALUES = {"iconname_lineEdit": "",
@@ -199,8 +243,17 @@ if inside_softimage():
 elif inside_maya():
     from wishlib.ma import show_qt
     import pymel.core as pm
+    import maya.OpenMayaUI as omui
+    from shiboken import wrapInstance
+
+    def maya_main_window():
+        main_window_ptr = omui.MQtUtil.mainWindow()
+        return wrapInstance(long(main_window_ptr), QtGui.QWidget)
 
     class RigIconEditor(RigIconEditorInterface):
+
+        def __init__(self, parent=maya_main_window()):
+            super(RigIconEditor, self).__init__(parent)
 
         def library_clicked(self):
             show_qt(RigIconLibrary)
@@ -211,10 +264,10 @@ elif inside_maya():
                 self.icons = [icon.Icon(x) for x in sel if icon.is_icon(x)]
                 # set widget values
                 for key, value in self.get_data().iteritems():
-                    print key
                     widget = getattr(self, key)
                     function = self.set_type.get(type(value))
                     # colorize multi widget
+                    print self.multi
                     style = ""
                     if key in self.multi:
                         style = "background-color: rgb(35, 35, 35);"
@@ -235,6 +288,11 @@ elif inside_maya():
                 for each in self.icons:
                     each.connect = None
                     self.connect_label.setText(str(None))
+
+        def color_clicked(self):
+            index = MPalette.getColor(parent=self)
+            for icon in self.icons:
+                icon.color = index
 
 else:
     class RigIconEditor(RigIconEditorInterface):

@@ -23,12 +23,11 @@ import wishlib.ma as app
 reload(app)
 
 DEFAULT_DATA = {"size": 1.0, "shape": "Null", "connect": None,
-                "colorr": 1.0, "colorg": 0.882, "colorb": 0.0,
-                "_posx": 0.0, "_posy": 0.0, "_posz": 0.0,
-                "_rotx": 0.0, "_roty": 0.0, "_rotz": 0.0,
-                "_sclx": 1.0, "_scly": 1.0, "_sclz": 1.0,
-                "_sizex": 1.0, "_sizey": 1.0, "_sizez": 1.0,
-                "_size": 1.0}
+                "_color": 1, "_posx": 0.0, "_posy": 0.0,
+                "_posz": 0.0, "_rotx": 0.0, "_roty": 0.0,
+                "_rotz": 0.0, "_sclx": 1.0, "_scly": 1.0,
+                "_sclz": 1.0, "_sizex": 1.0, "_sizey": 1.0,
+                "_sizez": 1.0, "_size": 1.0}
 
 
 def is_icon(obj):
@@ -75,7 +74,8 @@ class Icon(app.Wrapper):
                       'sizex', 'sizey', 'sizez',
                       'posx', 'posy', 'posz',
                       'rotx', 'roty', 'rotz',
-                      'connect_line', 'size']
+                      'connect_line', 'size',
+                      'color']
 
         for e in exceptions:
             self.EXCEPTIONS.append(e)
@@ -115,6 +115,15 @@ class Icon(app.Wrapper):
             for shp in self.node.getShapes():
                 pm.move(pm.PyNode(shp + '.cv[*]'), [x, y, z],
                         r=True)
+
+    @property
+    def color(self):
+        return self._color
+
+    @color.setter
+    def color(self, index):
+        self.node.overrideEnabled.set(True)
+        self.node.overrideColor.set(index)
 
     @property
     def posx(self):
